@@ -808,6 +808,21 @@ function selectGlassdoorDescription() {
   }
 }
 
+// Indeed runs two different frontends behind /viewjob: the classic
+// server-rendered page (#jobDescriptionText) and a newer React-Native-Web
+// rewrite that drops that id entirely and renders the description into an
+// unlabeled .react-native-html-content.simple-job-description-html div. Try
+// the classic id first, fall back to the RN-web class.
+function getIndeedDescriptionElement() {
+  return document.querySelector('#jobDescriptionText') ||
+    document.querySelector('.react-native-html-content.simple-job-description-html');
+}
+
+function getIndeedHeadingElement() {
+  return document.querySelector('#jobDescriptionTitleHeading') ||
+    document.querySelector('[data-testid="vj-job-description-heading"]');
+}
+
 // Indeed's search-panel job details swap in via async fetch: #jobDescriptionText
 // can exist in the DOM (as an empty skeleton, or mid-replacement between two
 // job cards) before its text content actually lands. Selecting at that instant
@@ -818,14 +833,14 @@ function selectIndeedDescription(attempt = 0) {
   const retryDelayMs = 200;
 
   try {
-    const el = document.querySelector('#jobDescriptionText');
+    const el = getIndeedDescriptionElement();
 
     if (!el || !el.textContent.trim()) {
       if (attempt < maxAttempts) {
         setTimeout(() => selectIndeedDescription(attempt + 1), retryDelayMs);
         return;
       }
-      debugLog('warn', 'Could not find populated Indeed job description element (#jobDescriptionText)');
+      debugLog('warn', 'Could not find populated Indeed job description element (#jobDescriptionText or .simple-job-description-html)');
       return;
     }
 
@@ -840,7 +855,7 @@ function selectIndeedDescription(attempt = 0) {
     // animating — a smooth scroll leaves an async window during which the
     // highlighted selection is easy to miss mid-motion (same reasoning as
     // ZipRecruiter's scrollIntoView below).
-    const heading = document.querySelector('#jobDescriptionTitleHeading');
+    const heading = getIndeedHeadingElement();
     if (heading) {
       heading.scrollIntoView({ behavior: 'auto', block: 'start' });
     } else {
@@ -880,7 +895,7 @@ function guardIndeedSelection(el, timeoutMs = 4000, intervalMs = 150) {
     }
 
     if (!el.isConnected) {
-      const freshEl = document.querySelector('#jobDescriptionText');
+      const freshEl = getIndeedDescriptionElement();
       if (!freshEl || !freshEl.textContent.trim()) return;
       el = freshEl;
     }
@@ -888,7 +903,7 @@ function guardIndeedSelection(el, timeoutMs = 4000, intervalMs = 150) {
     const rect = el.getBoundingClientRect();
     const offScreen = rect.bottom <= 0 || rect.top >= window.innerHeight;
     if (offScreen) {
-      const heading = document.querySelector('#jobDescriptionTitleHeading');
+      const heading = getIndeedHeadingElement();
       (heading || el).scrollIntoView({ behavior: 'auto', block: 'start' });
       debugLog('log', 'Re-scrolled Indeed description into view after it was reset');
     }
