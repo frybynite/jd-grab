@@ -114,6 +114,26 @@ function isBuiltInDedicatedPage() {
   return isBuiltIn() && /^\/job\/[^/]+\/\d+/.test(window.location.pathname);
 }
 
+// Check if we're on Handshake
+function isHandshake() {
+  return window.location.hostname.includes('joinhandshake.com');
+}
+
+// Handshake renders the job details in one of two containers: the right pane
+// of the search results page (/job-search/<id>) or the dedicated job page
+// (/jobs/<id>). Both share the same inner structure (h1 title, h3 sections).
+function getHandshakeDetailsContainer() {
+  return document.querySelector('[data-hook="job-details-page"]') ||
+         document.querySelector('[data-hook="right-content"]');
+}
+
+// Check if a Handshake job is currently shown (either layout)
+function isHandshakeJobPage() {
+  if (!isHandshake()) return false;
+  if (/^\/(job-search|jobs)\/\d+/.test(window.location.pathname)) return true;
+  return !!getHandshakeDetailsContainer()?.querySelector('h1');
+}
+
 // Check if we're on ZipRecruiter
 function isZipRecruiter() {
   return window.location.hostname.includes('ziprecruiter.com');
@@ -178,6 +198,9 @@ function isJobPage() {
   }
   if (isBuiltIn()) {
     return isBuiltInDedicatedPage();
+  }
+  if (isHandshake()) {
+    return isHandshakeJobPage();
   }
   if (isZipRecruiter()) {
     return isZipRecruiterJobPage();
@@ -589,6 +612,8 @@ function waitForContentAndSelect() {
       document.querySelector('#jobDescriptionText') ||
       document.querySelector('[class*="JobDetails_jobDescription"]') ||
       document.querySelector('[data-testid="job-card-v2"]') ||
+      document.querySelector('#the-position-section') ||
+      !!getHandshakeDetailsContainer()?.querySelector('h1') ||
       document.querySelector('.job__description.body') ||
       document.querySelector('.application-description.body') ||
       document.querySelector('div[data-qa="job-description"]') ||
@@ -717,6 +742,16 @@ function findJobTitleUrl() {
   if (isBuiltIn()) {
     if (isBuiltInDedicatedPage()) return window.location.href;
     debugLog('warn', 'Could not determine Built In job URL');
+    return null;
+  }
+
+  if (isHandshake()) {
+    // The title is a link to the canonical /jobs/<id> URL in both layouts.
+    const titleLink = getHandshakeDetailsContainer()?.querySelector('h1')?.closest('a');
+    if (titleLink?.href) return titleLink.href;
+    const match = window.location.pathname.match(/^\/(?:job-search|jobs)\/(\d+)/);
+    if (match) return `${window.location.origin}/jobs/${match[1]}`;
+    debugLog('warn', 'Could not determine Handshake job URL');
     return null;
   }
 
@@ -1085,6 +1120,68 @@ function selectBuiltInDescription() {
   }
 }
 
+function findHandshakeSection(container, headingText) {
+  // Each section is <div><div><h3>Heading</h3></div>...content...</div>; the
+  // section root is the h3's grandparent.
+  const heading = Array.from(container.querySelectorAll('h3'))
+    .find(h => h.textContent.trim() === headingText);
+  return heading?.parentElement?.parentElement || null;
+}
+
+function selectHandshakeDescription(attempt = 0) {
+  const maxAttempts = 15;
+  const retryDelayMs = 200;
+
+  try {
+    const container = getHandshakeDetailsContainer();
+    const title = container?.querySelector('h1');
+
+    if (!container || !title) {
+      if (attempt < maxAttempts) {
+        setTimeout(() => selectHandshakeDescription(attempt + 1), retryDelayMs);
+        return;
+      }
+      debugLog('warn', 'Could not find Handshake job details container');
+      return;
+    }
+
+    // The job description is truncated in the DOM behind a "More" button; the
+    // full text only exists after it is clicked. Click it, then poll until the
+    // button flips to "Show less" (the site expands in place).
+    const showMore = container.querySelector('button[aria-label^="Show more"]');
+    if (showMore) {
+      if (attempt === 0) {
+        debugLog('log', 'Expanding truncated Handshake description');
+        showMore.click();
+      }
+      if (attempt < maxAttempts) {
+        setTimeout(() => selectHandshakeDescription(attempt + 1), retryDelayMs);
+        return;
+      }
+      debugLog('warn', 'Handshake description did not expand; selecting what is visible');
+    }
+
+    // Title + "At a glance" + Job description + What they're looking for +
+    // What this job offers. Stop before "About the employer" / "Similar Jobs".
+    const endEl = findHandshakeSection(container, 'What this job offers') ||
+                  findHandshakeSection(container, "What they're looking for") ||
+                  findHandshakeSection(container, 'Job description') ||
+                  container;
+
+    const range = document.createRange();
+    range.setStartBefore(title);
+    range.setEndAfter(endEl);
+    window.focus();
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    title.scrollIntoView({ behavior: 'auto', block: 'start' });
+    debugLog('log', 'Handshake description selected successfully');
+  } catch (error) {
+    debugLog('error', 'Error selecting Handshake description', error);
+  }
+}
+
 function selectZipRecruiterDescription() {
   try {
     const heading = findZipRecruiterDescriptionHeading();
@@ -1234,6 +1331,11 @@ function selectAboutTheJobSection() {
 
     if (isBuiltIn()) {
       selectBuiltInDescription();
+      return;
+    }
+
+    if (isHandshake()) {
+      selectHandshakeDescription();
       return;
     }
 

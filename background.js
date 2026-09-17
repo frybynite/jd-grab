@@ -81,6 +81,13 @@ const SUPPORTED_SITE_PATTERNS = [
   '*://*.indeed.com/*',
   '*://*.glassdoor.com/*',
   '*://*.welcometothejungle.com/*',
+  '*://*.greenhouse.io/*',
+  '*://*.lever.co/*',
+  '*://jobs.ashbyhq.com/*',
+  '*://*.ziprecruiter.com/*',
+  '*://*.weworkremotely.com/*',
+  '*://*.builtin.com/*',
+  '*://*.joinhandshake.com/*',
 ];
 
 const CONTEXT_MENU_ACTIONS = {

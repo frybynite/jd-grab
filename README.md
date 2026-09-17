@@ -1,6 +1,6 @@
 # JD Grab
 
-A Chrome extension that allows you to quickly select job description text on LinkedIn, Indeed, Glassdoor, Wellfound, Welcome to the Jungle, Greenhouse, Lever, Ashby, ZipRecruiter, We Work Remotely, and Built In job postings using a customizable keyboard shortcut.
+A Chrome extension that allows you to quickly select job description text on LinkedIn, Indeed, Glassdoor, Wellfound, Welcome to the Jungle, Greenhouse, Lever, Ashby, ZipRecruiter, We Work Remotely, Built In, and Handshake job postings using a customizable keyboard shortcut.
 
 ## Supported Sites
 
@@ -15,6 +15,7 @@ A Chrome extension that allows you to quickly select job description text on Lin
 - ZipRecruiter
 - We Work Remotely
 - Built In
+- Handshake
 
 **Known limitation (Greenhouse):** on `my.greenhouse.io`, the "open job title in new tab/window" shortcut opens whatever URL the posting links to. Some companies link to `job-boards.greenhouse.io` (works normally), but others link to a custom company career page. Those custom pages have no consistent job description layout, so JD Grab's text-selection shortcut isn't guaranteed to work there — only the link-opening itself is reliable. Description selection inside the `my.greenhouse.io` modal itself is unaffected.
 
@@ -244,7 +245,7 @@ All logging will respect the `window.JDGrab.debugEnabled` flag.
 ## Privacy
 
 This extension:
-- Only runs on linkedin.com, indeed.com, glassdoor.com, wellfound.com, and welcometothejungle.com domains
+- Only runs on the supported job site domains listed above
 - Does not collect or transmit any data
 - Stores only your keyboard shortcut preference locally
 - Does not track your browsing or job search activity

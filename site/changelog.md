@@ -6,8 +6,10 @@ permalink: /changelog/
 
 # Changelog
 
-## 1.9.2
+## 1.10.0
 
+- **New site:** Handshake (both the search results view and the single job
+  page).
 - Fixed Welcome to the Jungle selection after their site redesign. Job pages
   now live at welcometothejungle.com/…/companies/…/jobs/… and the old app
   pages require a login.

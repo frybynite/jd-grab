@@ -6,6 +6,13 @@ Supported sites
 • Glassdoor
 • Wellfound
 • Welcome to the Jungle
+• Greenhouse
+• Lever
+• Ashby
+• ZipRecruiter
+• We Work Remotely
+• Built In
+• Handshake
 
 Features
 • Customizable keyboard shortcut (default: Option/Alt + Shift + S)
