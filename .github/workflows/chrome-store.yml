@@ -13,15 +13,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       # Only publish when manifest.json's version actually changed
       # (manual workflow_dispatch runs always publish).
+      # Compare against the commit master pointed at before this push, not
+      # HEAD^ — a push of several commits where the bump isn't the last one
+      # would otherwise look unchanged.
       - name: Detect version change
         id: version
+        env:
+          BEFORE: ${{ github.event.before }}
         run: |
           NEW=$(jq -r .version manifest.json)
-          if OLD_MANIFEST=$(git show HEAD^:manifest.json 2>/dev/null); then
+          BASE="$BEFORE"
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            BASE="HEAD^"
+          fi
+          if OLD_MANIFEST=$(git show "$BASE:manifest.json" 2>/dev/null); then
             OLD=$(echo "$OLD_MANIFEST" | jq -r .version)
           else
             OLD=""
