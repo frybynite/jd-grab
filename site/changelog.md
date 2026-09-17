@@ -6,6 +6,11 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.11.0
+
+- **New site:** Remote Rocketship. Selection covers the company, job title,
+  and Description through Benefits.
+
 ## 1.10.0
 
 - **New site:** Handshake (both the search results view and the single job

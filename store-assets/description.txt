@@ -13,6 +13,7 @@ Supported sites
 • We Work Remotely
 • Built In
 • Handshake
+• Remote Rocketship
 
 Features
 • Customizable keyboard shortcut (default: Option/Alt + Shift + S)

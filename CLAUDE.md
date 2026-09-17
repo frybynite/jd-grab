@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Manifest V3 Chrome extension ("JD Grab"). Lets user select/copy a job description on one keystroke across 12 job sites (LinkedIn, Indeed, Glassdoor, Wellfound, Welcome to the Jungle, Greenhouse incl. `my.greenhouse.io` modal variant, Lever, Ashby, ZipRecruiter, We Work Remotely, Built In, Handshake). Plain JS, no bundler, no framework — files are loaded directly as listed in `manifest.json`.
+Manifest V3 Chrome extension ("JD Grab"). Lets user select/copy a job description on one keystroke across 13 job sites (LinkedIn, Indeed, Glassdoor, Wellfound, Welcome to the Jungle, Greenhouse incl. `my.greenhouse.io` modal variant, Lever, Ashby, ZipRecruiter, We Work Remotely, Built In, Handshake, Remote Rocketship). Plain JS, no bundler, no framework — files are loaded directly as listed in `manifest.json`.
 
 ## Commands
 

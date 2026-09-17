@@ -88,6 +88,7 @@ const SUPPORTED_SITE_PATTERNS = [
   '*://*.weworkremotely.com/*',
   '*://*.builtin.com/*',
   '*://*.joinhandshake.com/*',
+  '*://*.remoterocketship.com/*',
 ];
 
 const CONTEXT_MENU_ACTIONS = {

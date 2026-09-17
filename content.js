@@ -134,6 +134,25 @@ function isHandshakeJobPage() {
   return !!getHandshakeDetailsContainer()?.querySelector('h1');
 }
 
+// Check if we're on Remote Rocketship
+function isRemoteRocketship() {
+  return window.location.hostname.includes('remoterocketship.com');
+}
+
+// The site's classes are all Tailwind utilities, so sections are located by
+// their h3 label ("📋 Description", "🎯 Requirements", "🏖️ Benefits").
+function findRemoteRocketshipSection(label) {
+  return Array.from(document.querySelectorAll('h3'))
+    .find(h => h.textContent.includes(label)) || null;
+}
+
+// Check if we're on a dedicated Remote Rocketship job page
+// (e.g. /us/publicjobs/company/<company>/jobs/<slug>/)
+function isRemoteRocketshipDedicatedPage() {
+  return isRemoteRocketship() &&
+         /\/publicjobs\/company\/[^/]+\/jobs\/[^/]+/.test(window.location.pathname);
+}
+
 // Check if we're on ZipRecruiter
 function isZipRecruiter() {
   return window.location.hostname.includes('ziprecruiter.com');
@@ -201,6 +220,9 @@ function isJobPage() {
   }
   if (isHandshake()) {
     return isHandshakeJobPage();
+  }
+  if (isRemoteRocketship()) {
+    return isRemoteRocketshipDedicatedPage();
   }
   if (isZipRecruiter()) {
     return isZipRecruiterJobPage();
@@ -614,6 +636,7 @@ function waitForContentAndSelect() {
       document.querySelector('[data-testid="job-card-v2"]') ||
       document.querySelector('#the-position-section') ||
       !!getHandshakeDetailsContainer()?.querySelector('h1') ||
+      (isRemoteRocketship() && !!findRemoteRocketshipSection('Description')) ||
       document.querySelector('.job__description.body') ||
       document.querySelector('.application-description.body') ||
       document.querySelector('div[data-qa="job-description"]') ||
@@ -752,6 +775,12 @@ function findJobTitleUrl() {
     const match = window.location.pathname.match(/^\/(?:job-search|jobs)\/(\d+)/);
     if (match) return `${window.location.origin}/jobs/${match[1]}`;
     debugLog('warn', 'Could not determine Handshake job URL');
+    return null;
+  }
+
+  if (isRemoteRocketship()) {
+    if (isRemoteRocketshipDedicatedPage()) return window.location.href;
+    debugLog('warn', 'Could not determine Remote Rocketship job URL');
     return null;
   }
 
@@ -1189,6 +1218,54 @@ function selectHandshakeDescription(attempt = 0) {
   }
 }
 
+function selectRemoteRocketshipDescription(attempt = 0) {
+  const maxAttempts = 15;
+  const retryDelayMs = 200;
+
+  try {
+    const title = document.querySelector('h1');
+    const description = findRemoteRocketshipSection('Description');
+
+    if (!title || !description) {
+      if (attempt < maxAttempts) {
+        setTimeout(() => selectRemoteRocketshipDescription(attempt + 1), retryDelayMs);
+        return;
+      }
+      debugLog('warn', 'Could not find Remote Rocketship job description');
+      return;
+    }
+
+    // Start at the company name in the left banner, which precedes the title
+    // in the DOM. On narrow viewports the banner is hidden (a duplicate renders
+    // inside the job card instead, already within the range), so start at the
+    // title.
+    const company = Array.from(document.querySelectorAll('h2'))
+      .find(h => h.querySelector('a[href*="/company/"]') &&
+                 h.getClientRects().length > 0 &&
+                 (h.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const startEl = company || title;
+
+    // Each section is <h3>label</h3><p>text</p>. End after the last section's
+    // text, before the trailing "Apply Now" button and "Similar Jobs".
+    const lastHeading = findRemoteRocketshipSection('Benefits') ||
+                        findRemoteRocketshipSection('Requirements') ||
+                        description;
+    const endEl = lastHeading.nextElementSibling || lastHeading;
+
+    const range = document.createRange();
+    range.setStartBefore(startEl);
+    range.setEndAfter(endEl);
+    window.focus();
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    startEl.scrollIntoView({ behavior: 'auto', block: 'start' });
+    debugLog('log', 'Remote Rocketship description selected successfully');
+  } catch (error) {
+    debugLog('error', 'Error selecting Remote Rocketship description', error);
+  }
+}
+
 function selectZipRecruiterDescription() {
   try {
     const heading = findZipRecruiterDescriptionHeading();
@@ -1343,6 +1420,11 @@ function selectAboutTheJobSection() {
 
     if (isHandshake()) {
       selectHandshakeDescription();
+      return;
+    }
+
+    if (isRemoteRocketship()) {
+      selectRemoteRocketshipDescription();
       return;
     }
 
