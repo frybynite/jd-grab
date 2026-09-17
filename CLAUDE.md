@@ -65,5 +65,6 @@ Changelog entries are user-facing, not engineering notes: write what changed for
 
 - `docs/plans/`, `docs/specs/` — dated design docs for past features; check before re-designing something similar.
 - `docs/chrome-store-credentials.md` — Chrome Web Store publishing credentials/notes.
+- `docs/manual-test-links.html` — open in a browser for one known-posting link per supported site to hand-test the shortcuts / context menu against the built extension. Add a section when adding a site; refresh a link when a posting expires.
 - `store-assets/`, `scripts/generate-screenshots.mjs`, `scripts/generate-promo-tiles.mjs` — Chrome Web Store listing assets.
 - `site/` — GitHub Pages site (changelog, landing page).
