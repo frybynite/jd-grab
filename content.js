@@ -983,13 +983,20 @@ function selectWelcomeToTheJungleDescription() {
       return;
     }
 
+    // Start at the job header (company, title, contract/location/salary
+    // summary, skills) when present. Apply/Save/Share buttons and the FAQ sit
+    // between it and "The position" in the DOM, so their labels ride along.
+    const header = document.querySelector('[data-testid="job-metadata-block"]');
+    const startEl = header || el;
+
     const range = document.createRange();
-    range.selectNodeContents(el);
+    range.setStartBefore(startEl);
+    range.setEndAfter(el);
     window.focus();
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    startEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     debugLog('log', 'Welcome to the Jungle description selected successfully');
   } catch (error) {
     debugLog('error', 'Error selecting Welcome to the Jungle description', error);

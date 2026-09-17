@@ -60,13 +60,17 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
 
     const selectedText = await page.evaluate(() => window.getSelection().toString());
 
+    expect(selectedText).toContain('Affirm');
+    expect(selectedText).toContain('Software Engineering Manager (App Experiences)');
+    expect(selectedText).toContain('Permanent contract');
+    expect(selectedText).toContain('$204K to 290K');
     expect(selectedText).toContain('Job description');
     expect(selectedText).toContain('The Engineering team builds systems');
     expect(selectedText).toContain('Preferred experience');
     expect(selectedText).toContain('7+ years of software engineering experience');
   });
 
-  test('does not select company, FAQ or related-jobs sections', async () => {
+  test('does not select company or related-jobs sections', async () => {
     await page.keyboard.down('Alt');
     await page.keyboard.down('Shift');
     await page.keyboard.press('S');
@@ -78,7 +82,6 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
     const selectedText = await page.evaluate(() => window.getSelection().toString());
 
     expect(selectedText).not.toContain('Who are they?');
-    expect(selectedText).not.toContain('Questions and answers about the job');
     expect(selectedText).not.toContain('These job openings might interest you');
     expect(selectedText).not.toContain('Share on LinkedIn');
   });
