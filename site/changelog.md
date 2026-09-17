@@ -6,6 +6,12 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.9.2
+
+- Fixed Welcome to the Jungle selection after their site redesign. Job pages
+  now live at welcometothejungle.com/…/companies/…/jobs/… and the old app
+  pages require a login.
+
 ## 1.9.1
 
 - Fixed a defect where selection didn't work on Indeed's newer job page layout.

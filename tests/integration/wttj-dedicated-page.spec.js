@@ -15,7 +15,7 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
     const htmlPath = path.join(__dirname, '../fixtures/wttj-dedicated-page.html');
     const html = fs.readFileSync(htmlPath, 'utf-8');
 
-    await page.route('https://app.welcometothejungle.com/**', route => {
+    await page.route('https://www.welcometothejungle.com/**', route => {
       route.fulfill({ body: html, contentType: 'text/html' });
     });
 
@@ -38,7 +38,7 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
       };
     });
 
-    await page.goto('https://app.welcometothejungle.com/jobs/test123');
+    await page.goto('https://www.welcometothejungle.com/en/companies/affirm/jobs/software-engineering-manager-app-experiences_new-york_afq6dk4m');
 
     await page.addScriptTag({ path: path.join(__dirname, '../../storage.js') });
     await page.addScriptTag({ path: path.join(__dirname, '../../content.js') });
@@ -60,13 +60,13 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
 
     const selectedText = await page.evaluate(() => window.getSelection().toString());
 
-    expect(selectedText).toContain('Chief Technology Officer');
-    expect(selectedText).toContain('Senior and Expert level');
-    expect(selectedText).toContain('Strong technical background');
-    expect(selectedText).toContain('Lead and scale');
+    expect(selectedText).toContain('Job description');
+    expect(selectedText).toContain('The Engineering team builds systems');
+    expect(selectedText).toContain('Preferred experience');
+    expect(selectedText).toContain('7+ years of software engineering experience');
   });
 
-  test('selects company and funding sections', async () => {
+  test('does not select company, FAQ or related-jobs sections', async () => {
     await page.keyboard.down('Alt');
     await page.keyboard.down('Shift');
     await page.keyboard.press('S');
@@ -77,10 +77,10 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
 
     const selectedText = await page.evaluate(() => window.getSelection().toString());
 
-    expect(selectedText).toContain('Company benefits');
-    expect(selectedText).toContain('Fully remote work environment');
-    expect(selectedText).toContain('Our take');
-    expect(selectedText).toContain('Total funding');
+    expect(selectedText).not.toContain('Who are they?');
+    expect(selectedText).not.toContain('Questions and answers about the job');
+    expect(selectedText).not.toContain('These job openings might interest you');
+    expect(selectedText).not.toContain('Share on LinkedIn');
   });
 
   test('does not select content outside job card', async () => {
@@ -111,12 +111,17 @@ test.describe('Welcome to the Jungle - Dedicated Job Page', () => {
     expect(selectedText).toBe('');
   });
 
+  test('isJobPage detects new company job URL shape', async () => {
+    const result = await page.evaluate(() => window.JDGrab?.isJobPage?.() ?? null);
+    expect(result).toBe(true);
+  });
+
   test('findJobTitleUrl returns current URL on dedicated page', async () => {
     const url = await page.evaluate(() => {
       return window.JDGrab?.findJobTitleUrl?.() ?? null;
     });
 
     expect(url).toContain('welcometothejungle.com');
-    expect(url).toContain('/jobs/test123');
+    expect(url).toContain('/companies/affirm/jobs/software-engineering-manager-app-experiences_new-york_afq6dk4m');
   });
 });

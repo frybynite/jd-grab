@@ -44,9 +44,13 @@ function isWelcomeToTheJungle() {
   return window.location.hostname.includes('welcometothejungle.com');
 }
 
-// Check if we're on a dedicated Welcome to the Jungle job page (e.g. /jobs/zMfP9vbb)
+// Check if we're on a dedicated Welcome to the Jungle job page.
+// Current layout: /{locale}/companies/{company}/jobs/{slug}
+// Legacy (app.welcometothejungle.com, ex-Otta): /jobs/{id}
 function isWelcomeToTheJungleDedicatedPage() {
-  return isWelcomeToTheJungle() && /^\/jobs\//.test(window.location.pathname);
+  if (!isWelcomeToTheJungle()) return false;
+  const path = window.location.pathname;
+  return /\/companies\/[^/]+\/jobs\/[^/]+/.test(path) || /^\/jobs\/[^/]+/.test(path);
 }
 
 // Check if we're on Greenhouse (boards.greenhouse.io or job-boards.greenhouse.io)
@@ -158,7 +162,7 @@ function isJobPage() {
            window.location.pathname.includes('/job-listing/');
   }
   if (isWelcomeToTheJungle()) {
-    return /^\/jobs\//.test(window.location.pathname);
+    return isWelcomeToTheJungleDedicatedPage();
   }
   if (isGreenhouseMy()) {
     return isGreenhouseMyModalOpen();
@@ -748,6 +752,7 @@ function findJobTitleUrl() {
 }
 
 window.JDGrab.findJobTitleUrl = findJobTitleUrl;
+window.JDGrab.isJobPage = isJobPage;
 
 function openJobTitleLink() {
   try {
@@ -931,7 +936,12 @@ function guardIndeedSelection(el, timeoutMs = 4000, intervalMs = 150) {
 
 function selectWelcomeToTheJungleDescription() {
   try {
-    const el = document.querySelector('[data-testid="job-card-v2"]');
+    // Current layout: "The position" section holds the job description +
+    // preferred experience. Fall back to the description block alone, then to
+    // the legacy app.welcometothejungle.com job card.
+    const el = document.querySelector('#the-position-section') ||
+               document.querySelector('[data-testid="job-section-description"]') ||
+               document.querySelector('[data-testid="job-card-v2"]');
 
     if (!el) {
       debugLog('warn', 'Could not find Welcome to the Jungle job description element');
