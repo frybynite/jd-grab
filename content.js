@@ -114,6 +114,17 @@ function isBuiltInDedicatedPage() {
   return isBuiltIn() && /^\/job\/[^/]+\/\d+/.test(window.location.pathname);
 }
 
+// The logged-in "Job Matches" page (/home/jobs/matches?jobid=<id>) is a
+// carousel of .job-match-item slides (id = job id); the URL's jobid tracks the
+// current slide, and off-screen slides carry aria-hidden="true".
+function getBuiltInActiveMatchItem() {
+  if (!isBuiltIn() || !window.location.pathname.startsWith('/home/jobs/matches')) return null;
+  const jobId = new URLSearchParams(window.location.search).get('jobid');
+  const byId = jobId && document.getElementById(jobId);
+  if (byId?.classList.contains('job-match-item')) return byId;
+  return document.querySelector('.job-match-item:not([aria-hidden="true"])');
+}
+
 // Check if we're on Handshake
 function isHandshake() {
   return window.location.hostname.includes('joinhandshake.com');
@@ -216,7 +227,7 @@ function isJobPage() {
     return isAshbyDedicatedPage();
   }
   if (isBuiltIn()) {
-    return isBuiltInDedicatedPage();
+    return isBuiltInDedicatedPage() || !!getBuiltInActiveMatchItem();
   }
   if (isHandshake()) {
     return isHandshakeJobPage();
@@ -764,6 +775,16 @@ function findJobTitleUrl() {
 
   if (isBuiltIn()) {
     if (isBuiltInDedicatedPage()) return window.location.href;
+    const matchItem = getBuiltInActiveMatchItem();
+    if (matchItem) {
+      // No job link is rendered on the slide; the canonical path only appears
+      // in the inline Builtin.jobMatchInit({...}) bootstrap data.
+      const aliasRe = new RegExp(`"alias":"(/job/[^"]+/${matchItem.id})"`);
+      for (const script of document.scripts) {
+        const match = script.textContent.match(aliasRe);
+        if (match) return new URL(match[1], window.location.origin).href;
+      }
+    }
     debugLog('warn', 'Could not determine Built In job URL');
     return null;
   }
@@ -1123,8 +1144,35 @@ function selectAshbyDescription() {
   }
 }
 
+function selectBuiltInMatchDescription(matchItem) {
+  const body = matchItem.querySelector(`#match-body-${matchItem.id}`);
+  if (!body) {
+    debugLog('warn', 'Could not find Built In job match description element');
+    return;
+  }
+
+  // The card is clipped to a preview until "Read Full Description" is clicked.
+  const showMore = body.parentElement.querySelector('.show-more-button');
+  if (showMore && !showMore.classList.contains('d-none')) showMore.click();
+
+  const range = document.createRange();
+  range.selectNodeContents(body);
+  window.focus();
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  body.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  debugLog('log', 'Built In job match description selected successfully');
+}
+
 function selectBuiltInDescription() {
   try {
+    const matchItem = getBuiltInActiveMatchItem();
+    if (matchItem) {
+      selectBuiltInMatchDescription(matchItem);
+      return;
+    }
+
     const descWrapper = document.querySelector('.job-post-item .html-parsed-content')?.parentElement;
 
     if (!descWrapper) {

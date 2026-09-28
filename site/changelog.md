@@ -6,6 +6,11 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.11.1
+
+- Built In: selection now works on your Job Matches page too, not just
+  single job pages.
+
 ## 1.11.0
 
 - **New site:** Remote Rocketship. Selection covers the company, job title,
