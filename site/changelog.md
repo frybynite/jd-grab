@@ -6,6 +6,12 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.12.0
+
+- **New site:** Workday company job boards (`myworkdayjobs.com`), on both the
+  single job page and the job panel in search results. Selection covers the
+  job title, job details, and the full description.
+
 ## 1.11.1
 
 - Built In: selection now works on your Job Matches page too, not just

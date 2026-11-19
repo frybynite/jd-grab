@@ -164,6 +164,36 @@ function isRemoteRocketshipDedicatedPage() {
          /\/publicjobs\/company\/[^/]+\/jobs\/[^/]+/.test(window.location.pathname);
 }
 
+// Check if we're on a Workday job board (<company>.wd<N>.myworkdayjobs.com)
+function isWorkday() {
+  return window.location.hostname.endsWith('.myworkdayjobs.com');
+}
+
+// The application form lives under the posting URL (.../apply/...), which has
+// no description to select.
+function isWorkdayApplyPath() {
+  return /\/apply(\/|$)/.test(window.location.pathname);
+}
+
+// Dedicated posting: /<board>/job/<location>/<slug>, optionally locale-prefixed
+// (e.g. /en-US/<board>/job/...)
+function isWorkdayDedicatedPage() {
+  return isWorkday() && !isWorkdayApplyPath() &&
+         /\/job\/[^/]+/.test(window.location.pathname);
+}
+
+// Search results with a job open in the side panel: /<board>/details/<slug>
+function isWorkdaySearchPanel() {
+  return isWorkday() && !isWorkdayApplyPath() &&
+         /\/details\/[^/]+/.test(window.location.pathname);
+}
+
+// Both layouts use the same data-automation-id hooks. The search page keeps
+// the open job inside section[data-automation-id="jobDetails"].
+function getWorkdayJobContainer() {
+  return document.querySelector('[data-automation-id="jobDetails"]') || document;
+}
+
 // Check if we're on ZipRecruiter
 function isZipRecruiter() {
   return window.location.hostname.includes('ziprecruiter.com');
@@ -234,6 +264,9 @@ function isJobPage() {
   }
   if (isRemoteRocketship()) {
     return isRemoteRocketshipDedicatedPage();
+  }
+  if (isWorkday()) {
+    return isWorkdayDedicatedPage() || isWorkdaySearchPanel();
   }
   if (isZipRecruiter()) {
     return isZipRecruiterJobPage();
@@ -648,6 +681,7 @@ function waitForContentAndSelect() {
       document.querySelector('#the-position-section') ||
       !!getHandshakeDetailsContainer()?.querySelector('h1') ||
       (isRemoteRocketship() && !!findRemoteRocketshipSection('Description')) ||
+      document.querySelector('[data-automation-id="jobPostingDescription"]') ||
       document.querySelector('.job__description.body') ||
       document.querySelector('.application-description.body') ||
       document.querySelector('div[data-qa="job-description"]') ||
@@ -802,6 +836,17 @@ function findJobTitleUrl() {
   if (isRemoteRocketship()) {
     if (isRemoteRocketshipDedicatedPage()) return window.location.href;
     debugLog('warn', 'Could not determine Remote Rocketship job URL');
+    return null;
+  }
+
+  if (isWorkday()) {
+    if (isWorkdayDedicatedPage()) return window.location.href;
+    if (isWorkdaySearchPanel()) {
+      // The panel header has an "Open in new window" link to the posting.
+      const link = document.querySelector('[data-automation-id="jobDetails"] a[href*="/job/"]');
+      if (link?.href) return link.href;
+    }
+    debugLog('warn', 'Could not determine Workday job URL');
     return null;
   }
 
@@ -1314,6 +1359,42 @@ function selectRemoteRocketshipDescription(attempt = 0) {
   }
 }
 
+function selectWorkdayDescription(attempt = 0) {
+  const maxAttempts = 15;
+  const retryDelayMs = 200;
+
+  try {
+    const container = getWorkdayJobContainer();
+    const title = container.querySelector('[data-automation-id="jobPostingHeader"]');
+    const description = container.querySelector('[data-automation-id="jobPostingDescription"]');
+
+    // The SPA renders the description container before its text arrives.
+    if (!title || !description?.textContent.trim()) {
+      if (attempt < maxAttempts) {
+        setTimeout(() => selectWorkdayDescription(attempt + 1), retryDelayMs);
+        return;
+      }
+      debugLog('warn', 'Could not find Workday job description');
+      return;
+    }
+
+    // Title, then the Apply button and the details list (location, time type,
+    // requisition id), then the description. The sidebar after it is
+    // company boilerplate, so the range ends at the description.
+    const range = document.createRange();
+    range.setStartBefore(title);
+    range.setEndAfter(description);
+    window.focus();
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    title.scrollIntoView({ behavior: 'auto', block: 'start' });
+    debugLog('log', 'Workday description selected successfully');
+  } catch (error) {
+    debugLog('error', 'Error selecting Workday description', error);
+  }
+}
+
 function selectZipRecruiterDescription() {
   try {
     const heading = findZipRecruiterDescriptionHeading();
@@ -1473,6 +1554,11 @@ function selectAboutTheJobSection() {
 
     if (isRemoteRocketship()) {
       selectRemoteRocketshipDescription();
+      return;
+    }
+
+    if (isWorkday()) {
+      selectWorkdayDescription();
       return;
     }
 

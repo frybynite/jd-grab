@@ -14,6 +14,7 @@ Supported sites
 • Built In
 • Handshake
 • Remote Rocketship
+• Workday (company job boards on myworkdayjobs.com)
 
 Features
 • Customizable keyboard shortcut (default: Option/Alt + Shift + S)
