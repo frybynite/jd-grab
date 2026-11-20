@@ -6,6 +6,11 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.13.0
+
+- **New site:** BambooHR company careers pages (`bamboohr.com`). Selection
+  covers the job title, department and location, and the full description.
+
 ## 1.12.0
 
 - **New site:** Workday company job boards (`myworkdayjobs.com`), on both the

@@ -15,6 +15,7 @@ Supported sites
 • Handshake
 • Remote Rocketship
 • Workday (company job boards on myworkdayjobs.com)
+• BambooHR (company careers pages on bamboohr.com)
 
 Features
 • Customizable keyboard shortcut (default: Option/Alt + Shift + S)

@@ -194,6 +194,27 @@ function getWorkdayJobContainer() {
   return document.querySelector('[data-automation-id="jobDetails"]') || document;
 }
 
+// Check if we're on a BambooHR careers site (<company>.bamboohr.com/careers)
+function isBambooHR() {
+  return window.location.hostname.endsWith('.bamboohr.com');
+}
+
+// Posting: /careers/<numeric id>. The job list lives at /careers.
+function isBambooHRDedicatedPage() {
+  return isBambooHR() && /^\/careers\/\d+\/?$/.test(window.location.pathname);
+}
+
+// The posting's main column is a <section> holding the back link, the title
+// block (h1 + department/location line), and the description as its last
+// child. Class names are hashed per build, so anchor on the h1 instead.
+function findBambooHRPosting() {
+  const title = document.querySelector('main h1');
+  const section = title?.closest('section');
+  const description = section?.lastElementChild;
+  if (!description || description.contains(title)) return null;
+  return { title, section, description };
+}
+
 // Check if we're on ZipRecruiter
 function isZipRecruiter() {
   return window.location.hostname.includes('ziprecruiter.com');
@@ -267,6 +288,9 @@ function isJobPage() {
   }
   if (isWorkday()) {
     return isWorkdayDedicatedPage() || isWorkdaySearchPanel();
+  }
+  if (isBambooHR()) {
+    return isBambooHRDedicatedPage();
   }
   if (isZipRecruiter()) {
     return isZipRecruiterJobPage();
@@ -682,6 +706,7 @@ function waitForContentAndSelect() {
       !!getHandshakeDetailsContainer()?.querySelector('h1') ||
       (isRemoteRocketship() && !!findRemoteRocketshipSection('Description')) ||
       document.querySelector('[data-automation-id="jobPostingDescription"]') ||
+      (isBambooHR() && !!findBambooHRPosting()?.description.textContent.trim()) ||
       document.querySelector('.job__description.body') ||
       document.querySelector('.application-description.body') ||
       document.querySelector('div[data-qa="job-description"]') ||
@@ -847,6 +872,12 @@ function findJobTitleUrl() {
       if (link?.href) return link.href;
     }
     debugLog('warn', 'Could not determine Workday job URL');
+    return null;
+  }
+
+  if (isBambooHR()) {
+    if (isBambooHRDedicatedPage()) return window.location.href;
+    debugLog('warn', 'Could not determine BambooHR job URL');
     return null;
   }
 
@@ -1395,6 +1426,39 @@ function selectWorkdayDescription(attempt = 0) {
   }
 }
 
+function selectBambooHRDescription(attempt = 0) {
+  const maxAttempts = 15;
+  const retryDelayMs = 200;
+
+  try {
+    // The page is client-rendered; the description arrives after the shell.
+    const posting = findBambooHRPosting();
+    if (!posting?.description.textContent.trim()) {
+      if (attempt < maxAttempts) {
+        setTimeout(() => selectBambooHRDescription(attempt + 1), retryDelayMs);
+        return;
+      }
+      debugLog('warn', 'Could not find BambooHR job description');
+      return;
+    }
+
+    // Title, the department/location line, then the description. The
+    // sidebar (Apply button, job details) comes after this section in the
+    // DOM, so the range stops at the end of the section.
+    const range = document.createRange();
+    range.setStartBefore(posting.title);
+    range.setEndAfter(posting.description);
+    window.focus();
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    posting.title.scrollIntoView({ behavior: 'auto', block: 'start' });
+    debugLog('log', 'BambooHR description selected successfully');
+  } catch (error) {
+    debugLog('error', 'Error selecting BambooHR description', error);
+  }
+}
+
 function selectZipRecruiterDescription() {
   try {
     const heading = findZipRecruiterDescriptionHeading();
@@ -1559,6 +1623,11 @@ function selectAboutTheJobSection() {
 
     if (isWorkday()) {
       selectWorkdayDescription();
+      return;
+    }
+
+    if (isBambooHR()) {
+      selectBambooHRDescription();
       return;
     }
 

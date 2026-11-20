@@ -90,6 +90,7 @@ const SUPPORTED_SITE_PATTERNS = [
   '*://*.joinhandshake.com/*',
   '*://*.remoterocketship.com/*',
   '*://*.myworkdayjobs.com/*',
+  '*://*.bamboohr.com/*',
 ];
 
 const CONTEXT_MENU_ACTIONS = {
