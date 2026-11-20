@@ -6,6 +6,10 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.13.1
+
+- Fixed selection on Welcome to the Jungle job pages after the site's redesign.
+
 ## 1.13.0
 
 - **New site:** BambooHR company careers pages (`bamboohr.com`). Selection

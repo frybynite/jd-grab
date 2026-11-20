@@ -703,6 +703,7 @@ function waitForContentAndSelect() {
       document.querySelector('[class*="JobDetails_jobDescription"]') ||
       document.querySelector('[data-testid="job-card-v2"]') ||
       document.querySelector('#the-position-section') ||
+      (isWelcomeToTheJungle() && !!findWelcomeToTheJungleColumnRange()) ||
       !!getHandshakeDetailsContainer()?.querySelector('h1') ||
       (isRemoteRocketship() && !!findRemoteRocketshipSection('Description')) ||
       document.querySelector('[data-automation-id="jobPostingDescription"]') ||
@@ -1095,9 +1096,38 @@ function guardIndeedSelection(el, timeoutMs = 4000, intervalMs = 150) {
   indeedSelectionGuardInterval = setInterval(check, intervalMs);
 }
 
+// Current (late-2026) layout: one column of sibling <section>s under the job
+// header: header, skills, "You'll be part of" (company blurb), "You'll be
+// working on", "We're looking for", then an "Explore the company" link
+// section. Headings are localized, so match on structure: select from the
+// header through the last section that has an <h2>. The company blurb sits
+// between the header and the description, so it lands in the selection too.
+function findWelcomeToTheJungleColumnRange() {
+  const header = document.querySelector('[data-testid="job-header"]');
+  if (!header || !header.parentElement) return null;
+  const sections = [...header.parentElement.children]
+    .filter(c => c.tagName === 'SECTION' && c.querySelector('h2'));
+  if (sections.length === 0) return null;
+  return { startEl: header, endEl: sections[sections.length - 1] };
+}
+
 function selectWelcomeToTheJungleDescription() {
   try {
-    // Current layout: "The position" section holds the job description +
+    const column = findWelcomeToTheJungleColumnRange();
+    if (column) {
+      const range = document.createRange();
+      range.setStartBefore(column.startEl);
+      range.setEndAfter(column.endEl);
+      window.focus();
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      column.startEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      debugLog('log', 'Welcome to the Jungle description selected successfully');
+      return;
+    }
+
+    // Previous layout: "The position" section holds the job description +
     // preferred experience. Fall back to the description block alone, then to
     // the legacy app.welcometothejungle.com job card.
     const el = document.querySelector('#the-position-section') ||
