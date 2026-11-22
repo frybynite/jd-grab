@@ -6,6 +6,12 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.14.0
+
+- **New sites:** Dayforce, UKG Pro, Oracle Recruiting, Oracle Taleo, Monster,
+  CareerBuilder, and Levels.fyi. On Monster, CareerBuilder, and Oracle
+  Recruiting, selection also works in the search results panel.
+
 ## 1.13.1
 
 - Fixed selection on Welcome to the Jungle job pages after the site's redesign.

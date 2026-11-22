@@ -215,6 +215,131 @@ function findBambooHRPosting() {
   return { title, section, description };
 }
 
+// Check if we're on a Dayforce candidate portal (jobs.dayforcehcm.com)
+function isDayforce() {
+  return window.location.hostname === 'jobs.dayforcehcm.com';
+}
+
+// Posting: /[<locale>/]<company>/<board>/jobs/<id>. The job list lives at
+// /<locale>/<company>/<board>.
+function isDayforceDedicatedPage() {
+  return isDayforce() && /\/jobs\/\d+\/?$/.test(window.location.pathname);
+}
+
+// The posting is one card. Its head holds the title, requisition number, and
+// location. Its body holds, in order: Apply/Share, the "Job Description"
+// heading, the posted date, a row with the description (one or more
+// .sanitized-html blocks), then the "Job Details" list and a QR code.
+function findDayforcePosting() {
+  const card = document.querySelector('main .ant-card');
+  const title = card?.querySelector('.ant-card-head h1');
+  const body = card?.querySelector('.ant-card-body');
+  let description = body?.querySelector('.sanitized-html');
+  while (description && description.parentElement !== body) {
+    description = description.parentElement;
+  }
+  if (!title || !description) return null;
+  return { title, description };
+}
+
+// Check if we're on a UKG Pro (UltiPro) job board. Older boards live on
+// recruiting.ultipro.com / recruiting2.ultipro.com, newer ones on
+// <company>.rec.pro.ukg.net. Both run the same app.
+function isUKG() {
+  const host = window.location.hostname;
+  return host === 'recruiting.ultipro.com' ||
+         host === 'recruiting2.ultipro.com' ||
+         host.endsWith('.rec.pro.ukg.net');
+}
+
+// Posting: /<tenant>/JobBoard/<board id>/OpportunityDetail?opportunityId=<id>
+function isUKGDedicatedPage() {
+  return isUKG() &&
+         /\/JobBoard\/[^/]+\/OpportunityDetail\/?$/i.test(window.location.pathname) &&
+         new URLSearchParams(window.location.search).has('opportunityId');
+}
+
+// Check if we're on an Oracle Recruiting Cloud career site
+// (<tenant>.fa.<region>.oraclecloud.com/hcmUI/CandidateExperience/...)
+function isOracleRecruiting() {
+  return window.location.hostname.endsWith('.oraclecloud.com') &&
+         window.location.pathname.includes('/hcmUI/CandidateExperience/');
+}
+
+// Posting: .../sites/<site>/job/<id>. The search results open the same
+// posting in an overlay at .../sites/<site>/jobs/preview/<id>.
+function isOracleRecruitingJobPage() {
+  return isOracleRecruiting() &&
+         /\/sites\/[^/]+\/(job|jobs\/preview)\/[^/]+/.test(window.location.pathname);
+}
+
+// Check if we're on an Oracle Taleo career section (<company>.taleo.net)
+function isTaleo() {
+  return window.location.hostname.endsWith('.taleo.net');
+}
+
+// Posting: /careersection/<section>/jobdetail.ftl. Opening a job from the
+// list posts a form, so the URL often has no ?job= parameter.
+function isTaleoDedicatedPage() {
+  return isTaleo() && /\/careersection\/.*jobdetail\.ftl$/.test(window.location.pathname);
+}
+
+// Taleo's generated element ids contain dots, so look them up by id rather
+// than with a CSS selector.
+function findTaleoPosting() {
+  const title = document.getElementById('requisitionDescriptionInterface.reqTitleLinkAction.row1');
+  const section = title?.closest('.editablesection');
+  if (!section) return null;
+  return { title, section };
+}
+
+// Monster and CareerBuilder have the same owner and run the same job search
+// app with identical markup. Only the posting path differs.
+function isMonsterPlatform() {
+  const host = window.location.hostname;
+  return host === 'monster.com' || host.endsWith('.monster.com') ||
+         host === 'careerbuilder.com' || host.endsWith('.careerbuilder.com');
+}
+
+// Posting: /job-openings/<slug>--<id> on Monster,
+// /job-details/<slug>--<id> on CareerBuilder
+const MONSTER_PLATFORM_POSTING_PATH = /^\/(job-openings|job-details)\//;
+
+function isMonsterPlatformDedicatedPage() {
+  return isMonsterPlatform() && MONSTER_PLATFORM_POSTING_PATH.test(window.location.pathname);
+}
+
+// Search results show the selected job in a side panel without changing the
+// URL. The dedicated page uses the same job view markup.
+function getMonsterPlatformJobView() {
+  const view = document.querySelector('[data-testid="svx-job-view-wrapper"]');
+  return view?.querySelector('[data-testid="jobTitle"]') ? view : null;
+}
+
+function isMonsterPlatformJobPage() {
+  return isMonsterPlatformDedicatedPage() ||
+         (isMonsterPlatform() && !!getMonsterPlatformJobView());
+}
+
+// Check if we're on Levels.fyi
+function isLevelsFyi() {
+  const host = window.location.hostname;
+  return host === 'levels.fyi' || host.endsWith('.levels.fyi');
+}
+
+// Jobs open in a detail pane at /jobs?jobId=<id>. Class names are CSS-module
+// hashes with a readable suffix (e.g. "CqpRoW_jobTitle"), so match on the
+// suffix.
+function getLevelsFyiJobDetail() {
+  const pane = document.querySelector('[class*="_jobDetailContainer"]');
+  return pane?.querySelector('h1[class*="_jobTitle"]') ? pane : null;
+}
+
+function isLevelsFyiJobPage() {
+  return isLevelsFyi() && window.location.pathname.startsWith('/jobs') &&
+         !!getLevelsFyiJobDetail();
+}
+
 // Check if we're on ZipRecruiter
 function isZipRecruiter() {
   return window.location.hostname.includes('ziprecruiter.com');
@@ -291,6 +416,24 @@ function isJobPage() {
   }
   if (isBambooHR()) {
     return isBambooHRDedicatedPage();
+  }
+  if (isDayforce()) {
+    return isDayforceDedicatedPage();
+  }
+  if (isUKG()) {
+    return isUKGDedicatedPage();
+  }
+  if (isOracleRecruiting()) {
+    return isOracleRecruitingJobPage();
+  }
+  if (isTaleo()) {
+    return isTaleoDedicatedPage();
+  }
+  if (isMonsterPlatform()) {
+    return isMonsterPlatformJobPage();
+  }
+  if (isLevelsFyi()) {
+    return isLevelsFyiJobPage();
   }
   if (isZipRecruiter()) {
     return isZipRecruiterJobPage();
@@ -708,6 +851,12 @@ function waitForContentAndSelect() {
       (isRemoteRocketship() && !!findRemoteRocketshipSection('Description')) ||
       document.querySelector('[data-automation-id="jobPostingDescription"]') ||
       (isBambooHR() && !!findBambooHRPosting()?.description.textContent.trim()) ||
+      (isDayforce() && !!findDayforcePosting()?.description.textContent.trim()) ||
+      (isUKG() && !!document.querySelector('[data-automation="job-description"]')?.textContent.trim()) ||
+      (isOracleRecruiting() && !!document.querySelector('h1.job-details__title')) ||
+      (isTaleo() && !!findTaleoPosting()) ||
+      (isMonsterPlatform() && !!getMonsterPlatformJobView()) ||
+      (isLevelsFyi() && !!getLevelsFyiJobDetail()) ||
       document.querySelector('.job__description.body') ||
       document.querySelector('.application-description.body') ||
       document.querySelector('div[data-qa="job-description"]') ||
@@ -879,6 +1028,70 @@ function findJobTitleUrl() {
   if (isBambooHR()) {
     if (isBambooHRDedicatedPage()) return window.location.href;
     debugLog('warn', 'Could not determine BambooHR job URL');
+    return null;
+  }
+
+  if (isDayforce()) {
+    if (isDayforceDedicatedPage()) return window.location.href;
+    debugLog('warn', 'Could not determine Dayforce job URL');
+    return null;
+  }
+
+  if (isUKG()) {
+    if (isUKGDedicatedPage()) return window.location.href;
+    debugLog('warn', 'Could not determine UKG job URL');
+    return null;
+  }
+
+  if (isOracleRecruiting()) {
+    // The search overlay (.../jobs/preview/<id>) and the posting page
+    // (.../job/<id>) share an id, so map the overlay to the posting page.
+    if (isOracleRecruitingJobPage()) {
+      const path = window.location.pathname.replace('/jobs/preview/', '/job/');
+      return `${window.location.origin}${path}`;
+    }
+    debugLog('warn', 'Could not determine Oracle Recruiting job URL');
+    return null;
+  }
+
+  if (isTaleo()) {
+    if (isTaleoDedicatedPage()) {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('job')) return window.location.href;
+      // Opened from the job list by form post: rebuild the shareable URL
+      // from the requisition number shown next to the title.
+      const reqNumber = document
+        .getElementById('requisitionDescriptionInterface.reqContestNumberValue.row1')
+        ?.textContent.trim();
+      if (reqNumber) {
+        const url = new URL(window.location.origin + window.location.pathname);
+        url.searchParams.set('job', reqNumber);
+        if (params.has('lang')) url.searchParams.set('lang', params.get('lang'));
+        return url.href;
+      }
+    }
+    debugLog('warn', 'Could not determine Taleo job URL');
+    return null;
+  }
+
+  if (isMonsterPlatform()) {
+    if (isMonsterPlatformDedicatedPage()) return window.location.href;
+    // The side panel has no link to the posting, but the selected card in
+    // the results list does.
+    const links = document.querySelectorAll('[data-testid="JobCard"].card-selected a[href]');
+    for (const link of links) {
+      if (MONSTER_PLATFORM_POSTING_PATH.test(new URL(link.href).pathname)) return link.href;
+    }
+    debugLog('warn', 'Could not determine Monster/CareerBuilder job URL');
+    return null;
+  }
+
+  if (isLevelsFyi()) {
+    const jobId = new URLSearchParams(window.location.search).get('jobId');
+    if (jobId && isLevelsFyiJobPage()) {
+      return `${window.location.origin}/jobs?jobId=${encodeURIComponent(jobId)}`;
+    }
+    debugLog('warn', 'Could not determine Levels.fyi job URL');
     return null;
   }
 
@@ -1489,6 +1702,122 @@ function selectBambooHRDescription(attempt = 0) {
   }
 }
 
+// Selects from the start of `start` through the end of `end` and scrolls
+// `start` into view.
+function applyJobSelection(start, end) {
+  const range = document.createRange();
+  range.setStartBefore(start);
+  range.setEndAfter(end);
+  window.focus();
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  start.scrollIntoView({ behavior: 'auto', block: 'start' });
+}
+
+// Calls `find` until it returns { start, end }, then selects that span.
+// These sites render the description client-side after the page shell, so
+// the first attempt can come too early.
+function selectWhenReady(siteName, find, attempt = 0) {
+  const maxAttempts = 15;
+  const retryDelayMs = 200;
+
+  try {
+    const found = find();
+    if (!found) {
+      if (attempt < maxAttempts) {
+        setTimeout(() => selectWhenReady(siteName, find, attempt + 1), retryDelayMs);
+        return;
+      }
+      debugLog('warn', `Could not find ${siteName} job description`);
+      return;
+    }
+    applyJobSelection(found.start, found.end);
+    debugLog('log', `${siteName} description selected successfully`);
+  } catch (error) {
+    debugLog('error', `Error selecting ${siteName} description`, error);
+  }
+}
+
+// Title, requisition number, location, Apply/Share, posted date, then the
+// description. The "Job Details" list and QR code after it are not selected.
+function selectDayforceDescription() {
+  selectWhenReady('Dayforce', () => {
+    const posting = findDayforcePosting();
+    if (!posting?.description.textContent.trim()) return null;
+    return { start: posting.title, end: posting.description };
+  });
+}
+
+// Title, Share/Apply, the posting details sidebar (date, locations,
+// requisition number), then the description.
+function selectUKGDescription() {
+  selectWhenReady('UKG', () => {
+    const title = document.querySelector('[data-automation="opportunity-title"]');
+    const description = document.querySelector('[data-automation="job-description"]');
+    if (!title || !description?.textContent.trim()) return null;
+    return { start: title.closest('h1') || title, end: description };
+  });
+}
+
+// Each tenant configures which text sections appear (description,
+// responsibilities, qualifications, "About Us"). Every one is a heading
+// followed by its content block. The media slider and similar-jobs list
+// after them have no heading, so the range ends at the last headed section.
+function selectOracleRecruitingDescription() {
+  selectWhenReady('Oracle Recruiting', () => {
+    const title = document.querySelector('h1.job-details__title');
+    if (!title) return null;
+    const container = title.closest('.job-details') || document;
+    const sections = [...container.querySelectorAll(
+      '.job-details__description-header + .job-details__description-content'
+    )].filter(section => section.textContent.trim());
+    if (sections.length === 0) return null;
+    return { start: title, end: sections[sections.length - 1] };
+  });
+}
+
+// From the title line through the posting's detail fields (description,
+// qualifications, location, schedule, and so on), all in one section.
+function selectTaleoDescription() {
+  selectWhenReady('Taleo', () => {
+    const posting = findTaleoPosting();
+    if (!posting) return null;
+    return { start: posting.title, end: posting.section };
+  });
+}
+
+// Title, location, tags, then the description. On the dedicated page the
+// description is clamped behind "Show more", so expand it first.
+function selectMonsterPlatformDescription() {
+  selectWhenReady('Monster/CareerBuilder', () => {
+    const view = getMonsterPlatformJobView();
+    const title = view?.querySelector('[data-testid="jobTitle"]');
+    const inner = view?.querySelector('[data-testid="svx-description-container-inner"]');
+    if (!title || !inner?.textContent.trim()) return null;
+    const toggle = inner.querySelector('[data-testid="description-show-more-toggle"]');
+    if (toggle?.getAttribute('aria-expanded') === 'false') toggle.click();
+    // The clamp wrapper holds just the text, leaving out the toggle button.
+    const end = inner.querySelector('[data-testid="description-clamp-wrapper"]') || inner;
+    return { start: title, end };
+  });
+}
+
+// Title, the company/date/location line, then the description. The
+// description is collapsed behind "Show More", so expand it first. The
+// "Company Details" section after it is not selected.
+function selectLevelsFyiDescription() {
+  selectWhenReady('Levels.fyi', () => {
+    const pane = getLevelsFyiJobDetail();
+    const title = pane?.querySelector('h1[class*="_jobTitle"]');
+    const about = pane?.querySelector('[class*="_aboutContainer"]');
+    const description = about?.querySelector('[class*="_markdownText"]');
+    if (!title || !description?.textContent.trim()) return null;
+    about.querySelector('button[class*="_showMoreOrLess"][data-state="closed"]')?.click();
+    return { start: title, end: description };
+  });
+}
+
 function selectZipRecruiterDescription() {
   try {
     const heading = findZipRecruiterDescriptionHeading();
@@ -1658,6 +1987,36 @@ function selectAboutTheJobSection() {
 
     if (isBambooHR()) {
       selectBambooHRDescription();
+      return;
+    }
+
+    if (isDayforce()) {
+      selectDayforceDescription();
+      return;
+    }
+
+    if (isUKG()) {
+      selectUKGDescription();
+      return;
+    }
+
+    if (isOracleRecruiting()) {
+      selectOracleRecruitingDescription();
+      return;
+    }
+
+    if (isTaleo()) {
+      selectTaleoDescription();
+      return;
+    }
+
+    if (isMonsterPlatform()) {
+      selectMonsterPlatformDescription();
+      return;
+    }
+
+    if (isLevelsFyi()) {
+      selectLevelsFyiDescription();
       return;
     }
 

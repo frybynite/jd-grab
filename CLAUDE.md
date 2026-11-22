@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Manifest V3 Chrome extension ("JD Grab"). Lets user select/copy a job description on one keystroke across 15 job sites (LinkedIn, Indeed, Glassdoor, Wellfound, Welcome to the Jungle, Greenhouse incl. `my.greenhouse.io` modal variant, Lever, Ashby, ZipRecruiter, We Work Remotely, Built In, Handshake, Remote Rocketship, Workday on `*.myworkdayjobs.com`, BambooHR on `*.bamboohr.com/careers/<id>`). Plain JS, no bundler, no framework — files are loaded directly as listed in `manifest.json`.
+Manifest V3 Chrome extension ("JD Grab"). Lets user select/copy a job description on one keystroke across 22 job sites (LinkedIn, Indeed, Glassdoor, Wellfound, Welcome to the Jungle, Greenhouse incl. `my.greenhouse.io` modal variant, Lever, Ashby, ZipRecruiter, We Work Remotely, Built In, Handshake, Remote Rocketship, Workday on `*.myworkdayjobs.com`, BambooHR on `*.bamboohr.com/careers/<id>`, Dayforce on `jobs.dayforcehcm.com`, UKG Pro on `recruiting(2).ultipro.com` and `*.rec.pro.ukg.net`, Oracle Recruiting Cloud on `*.oraclecloud.com/hcmUI/CandidateExperience/`, Oracle Taleo on `*.taleo.net/careersection/`, Monster and CareerBuilder (same app, shared code path), Levels.fyi). Plain JS, no bundler, no framework — files are loaded directly as listed in `manifest.json`.
 
 ## Commands
 
@@ -47,7 +47,7 @@ No lint/typecheck script configured. `fullyParallel: false` and `workers: 1` in 
 ## Testing approach
 
 - `tests/unit/` — pure logic (shortcut validation, storage helpers), runs in plain browser context, no fixtures.
-- `tests/integration/` — loads a static HTML fixture from `tests/fixtures/` via `page.setContent()`, mocks `window.chrome.storage`/`window.chrome.runtime` inline, injects `storage.js` then `content.js` via `page.addScriptTag`, then exercises `window.JDGrab` / selection behavior directly. This is the pattern to copy when adding a new site: add a fixture HTML file capturing that site's real DOM structure, then a spec that mirrors an existing one (e.g. `tests/integration/lever-dedicated-page.spec.js`).
+- `tests/integration/` — loads a static HTML fixture from `tests/fixtures/` via `page.setContent()`, mocks `window.chrome.storage`/`window.chrome.runtime` inline, injects `storage.js` then `content.js` via `page.addScriptTag`, then exercises `window.JDGrab` / selection behavior directly. This is the pattern to copy when adding a new site: add a fixture HTML file capturing that site's real DOM structure, then a spec that mirrors an existing one. Newer specs (e.g. `tests/integration/dayforce.spec.js`) use `tests/helpers/site-fixture.js`, which serves the fixture at the real site URL so hostname/path detection runs for real.
 - `tests/e2e/` — loads the real unpacked extension into Chromium via `tests/helpers/extension-loader.js` (`launchBrowserWithExtension`) to test options/popup pages end-to-end.
 - `tests/helpers/chrome-mock.js` — reusable `chrome.storage`/`chrome.runtime` mocks for integration tests.
 

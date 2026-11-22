@@ -91,6 +91,15 @@ const SUPPORTED_SITE_PATTERNS = [
   '*://*.remoterocketship.com/*',
   '*://*.myworkdayjobs.com/*',
   '*://*.bamboohr.com/*',
+  '*://jobs.dayforcehcm.com/*',
+  '*://recruiting.ultipro.com/*',
+  '*://recruiting2.ultipro.com/*',
+  '*://*.rec.pro.ukg.net/*',
+  '*://*.oraclecloud.com/hcmUI/CandidateExperience/*',
+  '*://*.taleo.net/careersection/*',
+  '*://*.monster.com/*',
+  '*://*.careerbuilder.com/*',
+  '*://*.levels.fyi/*',
 ];
 
 const CONTEXT_MENU_ACTIONS = {

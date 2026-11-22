@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Collections Analyst with Portuguese - evening shift - Oracle Careers</title>
+</head>
+<body>
+<div class="app"><!--ko [ minimal ]--><!-- ko if: isBrowserUnsupported --><!-- /ko -->
+
+<!-- ko if: !isBrowserUnsupported -->
+
+
+<div class="app__viewport">
+    <div class="app__wrapper">
+        <div class="app__main">
+            <!-- ko component: 'custom-header' --><!-- ko if: enabled --><!-- /ko -->
+<!-- /ko -->
+
+            
+
+            <div class="app__content-wrapper">
+                <main id="main" class="app__content"><!--ko [ job-details-fullscreen ]--><job-details-wrapper params="state: state, displayStyles: displayStyles"><div class="job-details-wrapper">
+    
+
+    <!-- ko if: state().type === 'loading' --><!-- /ko -->
+
+    <!-- ko if: state().type === 'loaded' -->
+    <!-- ko template: { nodes: $componentTemplateNodes, data: $parent } -->
+    <div class="app-dialog__main background-color-dialog job-fullpreview__container job-details-page-container">
+        <job-details-checker params="viewData: viewData, jobId: jobId, isExpired: isExpired"><!-- ko if: state().type === 'expired' --><!-- /ko -->
+
+<!-- ko if: state().type === 'ok' -->
+<job-details-loader params="viewData: viewData, jobId: jobId"><!-- ko if: state().type === 'loaded' -->
+<job-details-page params="viewData: viewData, pageData: state().data"><div>
+    <job-details-header params="viewData: viewData, pageData: pageData"><div class="job-details__header">
+    <div class="app-dialog__bar job-actions text-color-secondary" dir="ltr">
+        <!-- ko template: { nodes: $componentTemplateNodes, data: $parent } -->
+        <!-- ko component: {
+            name: 'job-details-header-content',
+            params: {
+                job: pageData().job,
+                displaySettings: headerDisplaySettings,
+            }
+        } --><!-- ko if: showShareWidget -->
+<div class="job-actions__section" dir="ltr">
+    <share-widget params="
+            id: jobId,
+            showCopyLink: showCopyLink,
+            context: context
+        "><div class="share-widget">
+    <!-- ko if: showCopyLink -->
+    <copy-link params="id: id, context: context, language: lang, hasInitialFocus: hasInitialFocus"><input type="text" readonly="" class="share-widget__link" id="copy-link-cf4ed38a-dbda-4dd7-8b9b-8359680df4be" aria-label="Copy Link">
+
+<button class="share-widget__action focused-tooltip-left" title="Copy Link" aria-label="Copy Link">
+    <em class="copy-link__icon no-font-icon"><img alt="Copy"></em>
+</button>
+</copy-link>
+    <!-- /ko -->
+<div id="customShareContainer" class="share-widget__custom"><img alt="Share on LinkedIn" role="button" aria-label="Share on LinkedIn"><img alt="Share via Email" role="button" aria-label="Share via Email"><img alt="Share on WhatsApp" role="button" aria-label="Share on WhatsApp"><img alt="Share on Twitter" role="button" aria-label="Share on Twitter"></div></div>
+</share-widget>
+</div>
+<!-- /ko -->
+
+<div class="job-actions__section">
+    <!-- ko if: !displaySettings().iconHiddenFavorite -->
+    <button class="favourite-star job-actions__favorited focused-tooltip-left" title="Add Job to My Job Selections" aria-label="Add Job to My Job Selections"></button>
+    <!-- /ko -->
+</div>
+<!-- /ko -->
+    <!-- /ko -->
+
+        <!-- ko ifnot: $componentTemplateNodes.length --><!-- /ko -->
+
+        <div class="job-actions__section">
+            <!-- ko if: viewType === 'fullscreen'-->
+            <a class="job-actions__view-all-jobs" id="viewAllJobsButton" href="https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/jobs" title="View More Jobs" aria-label="View More Jobs">
+                <span class="job-actions__view-all-jobs-icon">
+                    <span class="job-actions__search-results">View More Jobs</span>
+                </span>
+            </a>
+            <!-- /ko -->
+            <!-- ko if: viewType !== 'fullscreen'--><!-- /ko -->
+        </div>
+    </div>
+</div>
+</job-details-header>
+    <article>
+        <job-details-content params="
+            pageData: pageData,
+            viewData: viewData,
+            onMessage: onMessage,
+        "><div class="job-details job-details--with-similar-jobs" dir="ltr" lang="en">
+    <!-- ko if: isGJSEnabled --><!-- /ko -->
+
+    <!-- ko component: {
+        name: 'cc-page',
+        params: {
+            page: viewData.customPage(),
+            pageData: pageData,
+            onMessage: onMessage,
+            classModifier: classModifier
+        }
+    } --><div class="cc-page cc-page--job-details-fullscreen">
+    <div class="cc-page__content">
+        <!-- ko foreach: { data: page.sections, as: 'section' } -->
+        <!-- ko component: {
+            name: 'cc-section',
+            params: {
+                section: section,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-section cc-section--width-null">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: section.params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-section__content">
+        <!-- ko foreach: { data: components, as: 'component' } --><!-- /ko -->
+
+        <!-- ko foreach: { data: rows, as: 'row' } -->
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><div class="component-styling-wrapper-108043">
+    
+
+    <h1 class="heading job-details__title">Collections Analyst with Portuguese - evening shift</h1>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: component.params.type, params: component } --><div class="component-styling-wrapper-108037">
+    
+
+    <div class="job-details__subtitle text-color-secondary">
+        <!-- ko component: { 
+                name: 'posting-locations', 
+                params: { 
+                    primaryLocation: pageData().job.primaryLocation,
+                    secondaryLocations: pageData().job.secondaryLocations,
+                    workplaceType: {
+                        name: pageData().job.workplaceType,
+                        code: pageData().job.workplaceTypeCode,
+                    },
+                    mode: customizationParams.content.displayAdditionalLocations() ? 'normal' : 'tooltip'
+                }
+            } --><!-- ko if: isTooltipMode() --><!-- /ko -->
+<!-- ko if: !isTooltipMode() -->
+<span>BUCHAREST, Romania</span>
+<!-- /ko -->
+
+<!-- ko if: workplaceTypeName --><!-- /ko -->
+<!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job && areJobTagsVisible -->
+<div class="component-styling-wrapper-108035">
+    
+
+    <div class="job-details__section job-details__section-tags">
+        <job-tags params="jobTags: jobTags"><div class="job-tags">
+    <!-- ko foreach: { data: jobTags, as: 'tag' } -->
+    <!-- ko if: tag.isVisible() --><!-- /ko -->
+    
+    <!-- ko if: tag.isVisible() --><!-- /ko -->
+    
+    <!-- ko if: tag.isVisible() -->
+    <!-- ko component: {
+                    name: 'tag',
+                    params: {
+                        className: tag.className, 
+                        label: tag.label, 
+                        layoutStyle: $parent.layoutStyle
+                    }
+                } --><div class="job-tag job-tag--be-first-to-apply">
+    <em class="job-tag__icon icon-be-first-to-apply"></em>
+    <span class="job-tag__title">Be the First to Apply</span>
+</div>
+<!-- /ko -->
+    <!-- /ko -->
+    <!-- /ko -->
+</div>
+</job-tags>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        
+        <!-- ko component: { name: component.params.type, params: component } --><div class="cc-element cc-element--rule cc-rule--align-center cc-element--rule-job-details">
+    <div class="cc-element-rule__line"></div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job -->
+<div class="component-styling-wrapper-108027">
+    
+
+    <div class="job-details__section">
+        <!-- ko ifnot: customizationParams.content.isTitleHidden --><!-- /ko -->
+
+        <div class="job-details__info-section">
+            <div class="job-meta">
+                <div class="job-meta__inner">
+                    <ul class="job-meta__list">
+                        <!-- ko foreach: jobDetailsInfoItems -->
+                        <!-- ko component: { name: 'job-meta-item', params: $data } --><li class="job-meta__item">
+    <!-- ko component: { name: componentName, params: componentData } --><span class="job-meta__title">Job Identification</span>
+<span class="job-meta__subitem">346142</span>
+<!-- /ko -->
+</li>
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } --><li class="job-meta__item">
+    <!-- ko component: { name: componentName, params: componentData } --><span class="job-meta__title">Job Category</span>
+<span class="job-meta__subitem">Finance</span>
+<!-- /ko -->
+</li>
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } --><li class="job-meta__item">
+    <!-- ko component: { name: componentName, params: componentData } --><span class="job-meta__title">Posting Date</span>
+<span class="job-meta__subitem">11/22/2026, 01:29 AM</span>
+<!-- /ko -->
+</li>
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        
+                        <!-- ko component: { name: 'job-meta-item', params: $data } -->
+<!-- /ko -->
+                        <!-- /ko -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.description -->
+<div class="component-styling-wrapper-108030">
+    
+
+    <div class="job-details__section">
+        <!-- ko ifnot: customizationParams.content.isTitleHidden -->
+        <h2 class="job-details__description-header text-color-secondary font-family-secondary">Job Description</h2>
+        <!-- /ko -->
+
+        <div class="job-details__description-content basic-formatter formatted-list"><p>Join Our Team at Oracle! Are you a talented problem-solver with a passion for financial analysis? Do you thrive in a dynamic environment and enjoy the challenge of financial recovery? If you are fluent in Portuguese and English and have experience in collections, credit analysis, or a similar role, we want to hear from you!</p>
+<p>You will have a <strong><u>hybrid </u></strong>work schedule, with one day a week spent at our Bucharest office.<br><strong><u>Evening schedule: 15:00 to 24:00.&nbsp;</u></strong><br>
+  &nbsp;</p>
+<p><strong>Qualifications &amp; Skills:</strong></p>
+
+
+
+
+
+</div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.responsibilities -->
+<div class="component-styling-wrapper-108031">
+    
+
+    <div class="job-details__section">
+        <!-- ko ifnot: customizationParams.content.isTitleHidden -->
+        <h2 class="job-details__description-header text-color-secondary font-family-secondary">Responsibilities</h2>
+        <!-- /ko -->
+
+        <div class="job-details__description-content basic-formatter"><p><strong>What You Will Do:</strong></p><p>As a Collections Analyst, you'll dive deep into customer accounts, leveraging your keen eye for detail and exceptional problem-solving skills to identify trends, assess credit risks, and implement effective collection strategies.</p><ul><li>Conduct thorough analysis of customer accounts to determine collection strategies and prioritize collections efforts.</li><li>Engage with customers via various channels, including phone and email, skillfully negotiating payment terms and resolving outstanding issues.</li><li>Resolve disputes related to customer payment on delinquent account.</li></ul></div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.qualifications --><!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.skills -->
+<div class="component-styling-wrapper-108029">
+    
+
+    <div class="job-details__section job-details__section--no-margin">
+        <!-- ko ifnot: customizationParams.content.isTitleHidden -->
+        <h2 class="job-details__description-header text-color-secondary font-family-secondary">Required Skills</h2>
+        <!-- /ko -->
+
+        <div class="job-details__skill-section">
+            <!-- ko if: $parent.pageData().job.skills.length > 1 || $parent.customizationParams.content.isTitleHidden --><!-- /ko -->
+
+            <ul class="job-details__skills">
+                <li class="job-details__skill-text job-details__skills-skill">Accounting Terminology</li>
+            
+                <li class="job-details__skill-text job-details__skills-skill">Assisting Collection</li>
+            
+                <li class="job-details__skill-text job-details__skills-skill">Billing and Cash Collection</li>
+            
+                
+            
+                
+            
+                
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.corporateDescription -->
+<div class="component-styling-wrapper-108041">
+    
+
+    <div class="job-details__section">
+        <!-- ko ifnot: customizationParams.content.isTitleHidden -->
+        <h2 class="job-details__description-header text-color-secondary font-family-secondary">About Us</h2>
+        <!-- /ko -->
+
+        <div class="job-details__description-content basic-formatter"><p>Only Oracle brings together the data, infrastructure, applications, and expertise to power everything from industry innovations to life-saving care. And with AI embedded across our products and services, we help customers turn that promise into a better future for all. Discover your potential at a company leading the way in AI and cloud solutions that impact billions of lives.</p>
+<p>True innovation starts when everyone is empowered to contribute. That’s why we’re committed to growing a workforce that promotes opportunities for all with competitive benefits that support our people with flexible medical, life insurance, and retirement options. We also encourage employees to give back to their communities through our volunteer programs.</p>
+<p>We’re committed to including people with disabilities at all stages of the employment process. If you require accessibility assistance or accommodation for a disability at any point, let us know by emailing <u><a href="mailto:accommodation-request_mb@oracle.com" target="_blank" rel="nofollow">accommodation-request_mb@oracle.com</a></u> or by calling 1-888-404-2494 in the United States.</p>
+</div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.organizationDescription --><!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><div class="component-styling-wrapper-108028">
+    
+
+    <div class="job-details__section job-details__section-apply-button font-family-secondary theme-color-1">
+        <button class="button apply-now-button theme-color-1 apply-now-button--apply-now">
+            <span class="button__label">Apply Now</span>
+        </button>
+
+        <!-- ko if: isAdminMode --><!-- /ko -->
+
+        <!-- ko if: showIndeedButton() --><!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><div class="cc-element cc-element--rule cc-rule--align-left null">
+    <div class="cc-element-rule__line"></div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: component.params.type, params: component } --><div class="cc-element cc-element--rich-text basic-formatter cc-paragraph"><p><span>Request a referral from an Oracle employee.</span></p></div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: linkedInConnectionsEnabled -->
+<div class="cc-element cc-element--linkedin-connections-widget">
+    <!-- ko if: !isAdminMode -->
+    <linkedin-connections><!-- ko if: linkedInConnectionsEnabled -->
+<div class="linkedin-connections">
+    <!-- ko if: isScriptLoaded -->
+    <!-- ko if: isReferalMode --><!-- /ko -->
+    <!-- ko ifnot: isReferalMode -->
+    <span class="IN-widget"></span>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko ifnot: isScriptLoaded --><!-- /ko -->
+</div>
+<!-- /ko -->
+</linkedin-connections>
+    <!-- /ko -->
+    <!-- ko if: isAdminMode --><!-- /ko -->
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><!-- ko if: pageData().job.media -->
+<div class="component-styling-wrapper-108032">
+    
+
+    <div class="job-details__section job-details__media-slider">
+        <div class="job-details__description-content basic-formatter">
+            <media-slider params="slides: pageData().job.media, isAdminMode: isAdminMode"><!-- ko if: slides.length -->
+<div class="media-slider">
+    <ul class="media-slider__items">
+        <!-- ko foreach: { data: slides, as: 'slide' } -->
+        <!-- ko component: { name: $component.getComponentType(slide), params: { slide: slide, activeIndex: $component.activeIndex, isAdminMode: $component.isAdminMode } } --><li class="media-slider__item media-slider__item--active">
+    <div class="media-slider__item-content">
+        
+    </div>
+
+    <div class="media-slider__item-background media-slider__item-background--video-poster"></div>
+</li>
+<!-- /ko -->
+        <!-- /ko -->
+    </ul>
+
+    <div class="media-slider__controls">
+        <button class="media-slider__change-slide media-slider__change-slide--previous focused-tooltip-left media-slider__change-slide--hidden" aria-hidden="true"></button>
+
+        <button class="media-slider__change-slide media-slider__change-slide--next focused-tooltip media-slider__change-slide--hidden" aria-hidden="true"></button>
+    </div>
+</div>
+<!-- /ko -->
+</media-slider>
+        </div>
+    </div>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: 'cc-row', params: { row: row, pageData: $parent.pageData, onMessage: $parent.onMessage } } --><div class="cc-row">
+    <div class="cc-row__content cc-columns-count-1">
+        <!-- ko foreach: { data: columns, as: 'column' } -->
+        <!-- ko component: {
+            name: 'cc-column',
+            params: {
+                column: column,
+                pageData: $parent.pageData,
+                onMessage: $parent.onMessage,
+            }
+        } --><div class="cc-column cc-column--default">
+    <cc-parallax params="backgroundSrc: backgroundSrc, isParallaxEnabled: isParallaxEnabled"><!-- ko if: isParallaxEnabled --><!-- /ko -->
+</cc-parallax>
+
+    <cc-video-background params="videoUrl: params.backgroundVideo, videoWrapper: true, isFullscreen: false"><!-- ko if: videoUrl --><!-- /ko -->
+</cc-video-background>
+
+    <div class="cc-column__content">
+        <!-- ko foreach: { data: components, as: 'component' } -->
+        <!-- ko component: { name: component.params.type, params: component } --><div class="cc-element cc-element--rich-text basic-formatter cc-paragraph"><p class="job-details__similar-jobs-header"><span>Similar Jobs</span></p></div>
+<!-- /ko -->
+        
+        <!-- ko component: { name: component.params.type, params: component } --><div class="component-styling-wrapper-108038">
+    
+
+    <!-- ko if: pageData().similarJobsState().type === 'loading'   --><!--  /ko  -->
+
+    <!-- ko if: pageData().similarJobsState().type === 'loaded'   -->
+    <div class="job-details__similar-jobs jobs-list">
+        <ul class="jobs-list__list">
+            <!-- ko foreach: { data: pageData().similarJobsState().requisitions, as: 'job' } -->
+
+            <!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' -->
+
+            <li data-qa="searchResultItem">
+                <!-- ko component: { name: $parent.resultItemComponentName, params: {
+                    job: job,
+                    customizationParams: $parent.searchResultsParams(),
+                } } --><!-- ko if: job.id === 'CE_TALENT_COMMUNITY_TILE' --><!-- /ko -->
+<!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' -->
+<div class="job-tile job-list-item">
+    <!-- ko if: isImageVisible() || isOrganizationLogoEnabled --><!-- /ko -->
+    <div class="job-list-item__content-container">
+        <a class="job-list-item__link" href="https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/346127">
+            <div class="job-list-item__content">
+                <job-details-similar-jobs-item-header params="
+                        job: job,
+                        jobHeadingConfig: jobHeadingConfig
+                    "><div class="job-tile__header">
+    <span class="job-tile__title">Collections Analyst with Portuguese - evening shift</span>
+
+    <!-- ko if: jobHeadingConfig().isAlreadyAppliedTagVisible  --><!-- /ko -->
+
+    <!-- ko if: hasSubheader -->
+    <div class="job-tile__subheader">
+        <!-- ko if: jobHeadingConfig().isLocationVisible -->
+        <span>
+            <!-- ko component: {
+                name: 'posting-locations',
+                params: {
+                    primaryLocation: job.primaryLocation,
+                    secondaryLocations: job.secondaryLocations,
+                    workplaceType: {
+                        name: job.workplaceType,
+                        code: job.workplaceTypeCode,
+                    },
+                    mode:'tooltip'
+                }
+            } --><!-- ko if: isTooltipMode() -->
+<span>BUCHAREST, Romania</span>
+<!-- ko if: secondaryLocationsCount > 0 --><!-- /ko -->
+<!-- /ko -->
+<!-- ko if: !isTooltipMode() --><!-- /ko -->
+
+<!-- ko if: workplaceTypeName --><!-- /ko -->
+<!-- /ko -->
+        </span>
+        <!-- /ko -->
+
+        <!-- ko if: jobHeadingConfig().isDistanceVisible --><!-- /ko -->
+
+        <!-- ko if: jobHeadingConfig().isPostingDateVisible --><!-- /ko -->
+
+        <!-- ko if: areJobTagsVisible -->
+        <job-tags params="jobTags: jobTags"><div class="job-tags">
+    <!-- ko foreach: { data: jobTags, as: 'tag' } -->
+    <!-- ko if: tag.isVisible() --><!-- /ko -->
+    
+    <!-- ko if: tag.isVisible() --><!-- /ko -->
+    
+    <!-- ko if: tag.isVisible() -->
+    <!-- ko component: {
+                    name: 'tag',
+                    params: {
+                        className: tag.className, 
+                        label: tag.label, 
+                        layoutStyle: $parent.layoutStyle
+                    }
+                } --><div class="job-tag job-tag--be-first-to-apply">
+    <em class="job-tag__icon icon-be-first-to-apply"></em>
+    <span class="job-tag__title">Be the First to Apply</span>
+</div>
+<!-- /ko -->
+    <!-- /ko -->
+    <!-- /ko -->
+</div>
+</job-tags>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>
+</job-details-similar-jobs-item-header>
+
+                <!-- ko if: isDescriptionVisible -->
+                <p class="job-list-item__description">Ready to Shape the Future of Collections?
+If you're enthusiastic about taking on a challenging role and driving success in a dynamic environment, apply now and join us at Oracle!</p>
+                <!-- /ko -->
+            </div>
+        </a>
+
+        <div class="job-list-item__actions-container">
+            <div class="job-list-item__actions">
+                <div>
+                    <button class="favourite-star job-tile__favorited focused-tooltip" title="Add Job to My Job Selections" aria-label="Add Job to My Job Selections"></button>
+                    <!-- ko if: isFavouriteToggled --><!-- /ko -->
+                </div>
+                <div><span class="job-list-item__show-icon" aria-hidden="true"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko  -->
+<!-- /ko -->
+            </li>
+            <!-- /ko -->
+            
+
+            <!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' -->
+
+            <li data-qa="searchResultItem">
+                <!-- ko component: { name: $parent.resultItemComponentName, params: {
+                    job: job,
+                    customizationParams: $parent.searchResultsParams(),
+                } } --><!-- ko if: job.id === 'CE_TALENT_COMMUNITY_TILE' --><!-- /ko -->
+<!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' -->
+<div class="job-tile job-list-item">
+    <!-- ko if: isImageVisible() || isOrganizationLogoEnabled --><!-- /ko -->
+    <div class="job-list-item__content-container">
+        <a class="job-list-item__link" href="https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/346133">
+            <div class="job-list-item__content">
+                <job-details-similar-jobs-item-header params="
+                        job: job,
+                        jobHeadingConfig: jobHeadingConfig
+                    "><div class="job-tile__header">
+    <span class="job-tile__title">Collections Analyst with Portuguese - evening shift</span>
+
+    <!-- ko if: jobHeadingConfig().isAlreadyAppliedTagVisible  --><!-- /ko -->
+
+    <!-- ko if: hasSubheader -->
+    <div class="job-tile__subheader">
+        <!-- ko if: jobHeadingConfig().isLocationVisible -->
+        <span>
+            <!-- ko component: {
+                name: 'posting-locations',
+                params: {
+                    primaryLocation: job.primaryLocation,
+                    secondaryLocations: job.secondaryLocations,
+                    workplaceType: {
+                        name: job.workplaceType,
+                        code: job.workplaceTypeCode,
+                    },
+                    mode:'tooltip'
+                }
+            } --><!-- ko if: isTooltipMode() -->
+<span>BUCHAREST, Romania</span>
+<!-- ko if: secondaryLocationsCount > 0 --><!-- /ko -->
+<!-- /ko -->
+<!-- ko if: !isTooltipMode() --><!-- /ko -->
+
+<!-- ko if: workplaceTypeName --><!-- /ko -->
+<!-- /ko -->
+        </span>
+        <!-- /ko -->
+
+        <!-- ko if: jobHeadingConfig().isDistanceVisible --><!-- /ko -->
+
+        <!-- ko if: jobHeadingConfig().isPostingDateVisible --><!-- /ko -->
+
+        <!-- ko if: areJobTagsVisible -->
+        <job-tags params="jobTags: jobTags"><div class="job-tags">
+    <!-- ko foreach: { data: jobTags, as: 'tag' } -->
+    <!-- ko if: tag.isVisible() --><!-- /ko -->
+    
+    <!-- ko if: tag.isVisible() --><!-- /ko -->
+    
+    <!-- ko if: tag.isVisible() -->
+    <!-- ko component: {
+                    name: 'tag',
+                    params: {
+                        className: tag.className, 
+                        label: tag.label, 
+                        layoutStyle: $parent.layoutStyle
+                    }
+                } --><div class="job-tag job-tag--be-first-to-apply">
+    <em class="job-tag__icon icon-be-first-to-apply"></em>
+    <span class="job-tag__title">Be the First to Apply</span>
+</div>
+<!-- /ko -->
+    <!-- /ko -->
+    <!-- /ko -->
+</div>
+</job-tags>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>
+</job-details-similar-jobs-item-header>
+
+                <!-- ko if: isDescriptionVisible -->
+                <p class="job-list-item__description">Ready to Shape the Future of Collections?
+If you're enthusiastic about taking on a challenging role and driving success in a dynamic environment, apply now and join us at Oracle!</p>
+                <!-- /ko -->
+            </div>
+        </a>
+
+        <div class="job-list-item__actions-container">
+            <div class="job-list-item__actions">
+                <div>
+                    <button class="favourite-star job-tile__favorited focused-tooltip" title="Add Job to My Job Selections" aria-label="Add Job to My Job Selections"></button>
+                    <!-- ko if: isFavouriteToggled --><!-- /ko -->
+                </div>
+                <div><span class="job-list-item__show-icon" aria-hidden="true"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko  -->
+<!-- /ko -->
+            </li>
+            <!-- /ko -->
+            
+
+            <!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' -->
+
+            <li data-qa="searchResultItem">
+                <!-- ko component: { name: $parent.resultItemComponentName, params: {
+                    job: job,
+                    customizationParams: $parent.searchResultsParams(),
+                } } --><!-- ko if: job.id === 'CE_TALENT_COMMUNITY_TILE' --><!-- /ko -->
+<!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' -->
+<div class="job-tile job-list-item">
+    <!-- ko if: isImageVisible() || isOrganizationLogoEnabled --><!-- /ko -->
+    <div class="job-list-item__content-container">
+        <a class="job-list-item__link" href="https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/346156">
+            <div class="job-list-item__content">
+                <job-details-similar-jobs-item-header params="
+                        job: job,
+                        jobHeadingConfig: jobHeadingConfig
+                    "><div class="job-tile__header">
+    <span class="job-tile__title">Collections Analyst with Portuguese - evening shift</span>
+
+    <!-- ko if: jobHeadingConfig().isAlreadyAppliedTagVisible  --><!-- /ko -->
+
+    <!-- ko if: hasSubheader -->
+    <div class="job-tile__subheader">
+        <!-- ko if: jobHeadingConfig().isLocationVisible -->
+        <span>
+            <!-- ko component: {
+                name: 'posting-locations',
+                params: {
+                    primaryLocation: job.primaryLocation,
+                    secondaryLocations: job.secondaryLocations,
+                    workplaceType: {
+                        name: job.workplaceType,
+                        code: job.workplaceTypeCode,
+                    },
+                    mode:'tooltip'
+                }
+            } --><!-- ko if: isTooltipMode() -->
+<span>BUCHAREST, Romania</span>
+<!-- ko if: secondaryLocationsCount > 0 --><!-- /ko -->
+<!-- /ko -->
+<!-- ko if: !isTooltipMode() --><!-- /ko -->
+
+<!-- ko if: workplaceTypeName --><!-- /ko -->
+<!-- /ko -->
+        </span>
+        <!-- /ko -->
+
+        <!-- ko if: jobHeadingConfig().isDistanceVisible --><!-- /ko -->
+
+        <!-- ko if: jobHeadingConfig().isPostingDateVisible --><!-- /ko -->
+
+        <!-- ko if: areJobTagsVisible --><!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>
+</job-details-similar-jobs-item-header>
+
+                <!-- ko if: isDescriptionVisible -->
+                <p class="job-list-item__description">Ready to Shape the Future of Collections?
+If you're enthusiastic about taking on a challenging role and driving success in a dynamic environment, apply now and join us at Oracle!</p>
+                <!-- /ko -->
+            </div>
+        </a>
+
+        <div class="job-list-item__actions-container">
+            <div class="job-list-item__actions">
+                <div>
+                    <button class="favourite-star job-tile__favorited focused-tooltip" title="Add Job to My Job Selections" aria-label="Add Job to My Job Selections"></button>
+                    <!-- ko if: isFavouriteToggled --><!-- /ko -->
+                </div>
+                <div><span class="job-list-item__show-icon" aria-hidden="true"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko  -->
+<!-- /ko -->
+            </li>
+            <!-- /ko -->
+            
+
+            <!-- ko ifnot: job.id === 'CE_TALENT_COMMUNITY_TILE' --><!-- /ko -->
+            <!-- /ko -->
+        </ul>
+
+        <!-- ko if: pageData().similarJobsState().hasMoreResults() && !customizationParams.content.hideMoreJobsButton() -->
+        <div class="job-details__see-more-button">
+            <button class="button theme-color-1 font-family-secondary">
+                <inline-spinner params="
+                        isLoading: pageData().similarJobsState().loadMoreInProgress,
+                        i18n: 'search.search-similar.see-more-button',
+                    "><span class="inline-spinner">
+    <!-- ko if: label -->
+    <span class="inline-spinner__label">See More Jobs</span>
+    <!-- /ko -->
+    <span class="inline-spinner__icon-wrapper">
+        <span class="inline-spinner__icon"></span>
+    </span>
+</span>
+</inline-spinner>
+            </button>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!--  /ko  -->
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->
+
+    <!-- ko if: isGJSEnabled --><!-- /ko -->
+</div>
+</job-details-content>
+    </article>
+</div>
+</job-details-page>
+<!-- /ko -->
+
+<!-- ko if: state().type === 'loading' --><!-- /ko -->
+
+<!-- ko if: state().type === 'error' --><!-- /ko -->
+</job-details-loader>
+<!-- /ko -->
+</job-details-checker>
+    </div>
+<!-- /ko -->
+    <!-- /ko -->
+</div>
+</job-details-wrapper>
+<!--/ko--></main>
+            </div>
+
+            <!-- ko view: 'dialogs' --><!-- /ko -->
+        </div>
+
+        <!-- ko component: 'app-footer' --><!-- ko if: footerEnable --><!-- /ko -->
+<!-- /ko -->
+
+        <!-- ko component: 'custom-footer' --><!-- ko if: customFooterEnable -->
+
+<!-- /ko -->
+<!-- /ko -->
+    </div>
+    
+</div>
+
+<!-- ko view: 'candidate-verification' -->
+<!-- /ko -->
+
+<!-- ko component: 'app-menu'-->
+<!-- /ko -->
+
+<!-- ko component: 'cookie-consent-modal-details' --><!-- ko if: isCookieConsentVisible() && viewData.customPage && !isLoading() --><!-- /ko -->
+<!-- /ko -->
+
+<!-- ko component: 'cookie-policy-modal' --><!-- ko if: viewData.customPage --><!-- /ko -->
+<!-- /ko -->
+
+<!-- ko component: 'cookie-preferences-modal' --><!-- ko if: viewData.customPage --><!-- /ko -->
+<!-- /ko -->
+
+<!-- ko component: 'notifications' -->
+<!-- /ko -->
+
+<!-- ko component: 'session-expire' -->
+<!-- /ko -->
+
+<!-- ko component: 'oda-summary' -->
+<!-- /ko -->
+
+<!--ko component: 'accessibility-messages' -->
+
+<!-- /ko -->
+
+<!-- /ko -->
+<!--/ko--></div>
+</body>
+</html>
