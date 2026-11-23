@@ -6,6 +6,12 @@ permalink: /changelog/
 
 # Changelog
 
+## 1.15.0
+
+- **New sites:** Rippling and Workable. On Workable, selection works on
+  company job boards and on Workable's job search, including the job panel
+  in search results.
+
 ## 1.14.0
 
 - **New sites:** Dayforce, UKG Pro, Oracle Recruiting, Oracle Taleo, Monster,

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "JD Grab",
-  "version": "1.14.0",
-  "description": "Quickly select and copy job description text with one keystroke on LinkedIn, Indeed, and 20 other job sites.",
+  "version": "1.15.0",
+  "description": "Quickly select and copy job description text with one keystroke on LinkedIn, Indeed, and 22 other job sites.",
   "permissions": ["storage", "windows", "contextMenus"],
   "icons": {
     "16": "icons/icon16.png",
@@ -26,7 +26,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.linkedin.com/*", "*://*.wellfound.com/*", "*://*.indeed.com/*", "*://*.glassdoor.com/*", "*://*.welcometothejungle.com/*", "*://*.greenhouse.io/*", "*://*.lever.co/*", "*://jobs.ashbyhq.com/*", "*://*.ziprecruiter.com/*", "*://*.weworkremotely.com/*", "*://*.builtin.com/*", "*://*.joinhandshake.com/*", "*://*.remoterocketship.com/*", "*://*.myworkdayjobs.com/*", "*://*.bamboohr.com/*", "*://jobs.dayforcehcm.com/*", "*://recruiting.ultipro.com/*", "*://recruiting2.ultipro.com/*", "*://*.rec.pro.ukg.net/*", "*://*.oraclecloud.com/hcmUI/CandidateExperience/*", "*://*.taleo.net/careersection/*", "*://*.monster.com/*", "*://*.careerbuilder.com/*", "*://*.levels.fyi/*"],
+      "matches": ["*://*.linkedin.com/*", "*://*.wellfound.com/*", "*://*.indeed.com/*", "*://*.glassdoor.com/*", "*://*.welcometothejungle.com/*", "*://*.greenhouse.io/*", "*://*.lever.co/*", "*://jobs.ashbyhq.com/*", "*://*.ziprecruiter.com/*", "*://*.weworkremotely.com/*", "*://*.builtin.com/*", "*://*.joinhandshake.com/*", "*://*.remoterocketship.com/*", "*://*.myworkdayjobs.com/*", "*://*.bamboohr.com/*", "*://jobs.dayforcehcm.com/*", "*://recruiting.ultipro.com/*", "*://recruiting2.ultipro.com/*", "*://*.rec.pro.ukg.net/*", "*://*.oraclecloud.com/hcmUI/CandidateExperience/*", "*://*.taleo.net/careersection/*", "*://*.monster.com/*", "*://*.careerbuilder.com/*", "*://*.levels.fyi/*", "*://ats.rippling.com/*", "*://apply.workable.com/*", "*://jobs.workable.com/*"],
       "js": ["storage.js", "content.js"],
       "run_at": "document_idle"
     }

@@ -23,6 +23,8 @@ Supported sites
 • Monster
 • CareerBuilder
 • Levels.fyi
+• Rippling (company job boards on ats.rippling.com)
+• Workable (company job boards on apply.workable.com and job search on jobs.workable.com)
 
 Features
 • Customizable keyboard shortcut (default: Option/Alt + Shift + S)

@@ -8,8 +8,8 @@ layout: default
 Select and copy job description text on LinkedIn, Indeed, Glassdoor, Wellfound,
 Welcome to the Jungle, Greenhouse, Lever, Ashby, ZipRecruiter, We Work
 Remotely, Built In, Handshake, Remote Rocketship, Workday, BambooHR, Dayforce,
-UKG, Oracle Recruiting, Taleo, Monster, CareerBuilder, and Levels.fyi with one
-keystroke.
+UKG, Oracle Recruiting, Taleo, Monster, CareerBuilder, Levels.fyi, Rippling,
+and Workable with one keystroke.
 
 ## What it does
 
@@ -41,6 +41,8 @@ selections. Copy it with your browser's usual copy shortcut (Cmd/Ctrl+C).
 - Monster
 - CareerBuilder
 - Levels.fyi
+- Rippling (company job boards on `ats.rippling.com`)
+- Workable (company job boards on `apply.workable.com` and job search on `jobs.workable.com`)
 
 **Note on Greenhouse:** on `my.greenhouse.io`, the "open job title in a new
 tab/window" shortcut opens whichever URL the posting links to. Some companies

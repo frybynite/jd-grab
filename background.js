@@ -100,6 +100,9 @@ const SUPPORTED_SITE_PATTERNS = [
   '*://*.monster.com/*',
   '*://*.careerbuilder.com/*',
   '*://*.levels.fyi/*',
+  '*://ats.rippling.com/*',
+  '*://apply.workable.com/*',
+  '*://jobs.workable.com/*',
 ];
 
 const CONTEXT_MENU_ACTIONS = {

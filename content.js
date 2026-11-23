@@ -340,6 +340,61 @@ function isLevelsFyiJobPage() {
          !!getLevelsFyiJobDetail();
 }
 
+// Check if we're on a Rippling job board (ats.rippling.com)
+function isRippling() {
+  return window.location.hostname === 'ats.rippling.com';
+}
+
+// Posting: /[<locale>/]<company>/jobs/<uuid>. The job list is
+// /<company>/jobs and the application form is .../jobs/<uuid>/apply.
+function isRipplingDedicatedPage() {
+  return isRippling() && /\/jobs\/[0-9a-f-]{36}\/?$/i.test(window.location.pathname);
+}
+
+// Class names are generated hashes, except for the description block.
+// The department, location, and Apply button sit after the description.
+function findRipplingPosting() {
+  const title = document.querySelector('main h1');
+  const description = document.querySelector('main .ATS_htmlPreview');
+  if (!title || !description) return null;
+  return { title, description };
+}
+
+// Check if we're on a Workable company job board (apply.workable.com)
+function isWorkableCareers() {
+  return window.location.hostname === 'apply.workable.com';
+}
+
+// Posting: /<company>/j/<shortcode>/. The application form is the same path
+// plus apply/ and has no description.
+function isWorkableCareersDedicatedPage() {
+  return isWorkableCareers() && /^\/[^/]+\/j\/[^/]+\/?$/.test(window.location.pathname);
+}
+
+// Each posting has up to three text sections: description, requirements,
+// and benefits.
+function findWorkableCareersSections() {
+  return [...document.querySelectorAll(
+    'main section[data-ui="job-description"], ' +
+    'main section[data-ui="job-requirements"], ' +
+    'main section[data-ui="job-benefits"]'
+  )].filter(section => section.textContent.trim());
+}
+
+// Check if we're on Workable's job search site (jobs.workable.com)
+function isWorkableJobSearch() {
+  return window.location.hostname === 'jobs.workable.com';
+}
+
+// Posting: /view/<id>/<slug>. Search results open the selected job in a
+// panel (a dialog on narrow windows) with ?selectedJobId=<id> in the URL.
+// Both use the same job markup.
+function isWorkableJobSearchJobPage() {
+  return isWorkableJobSearch() &&
+         (window.location.pathname.startsWith('/view/') ||
+          !!document.querySelector('[data-ui="overview-title"]'));
+}
+
 // Check if we're on ZipRecruiter
 function isZipRecruiter() {
   return window.location.hostname.includes('ziprecruiter.com');
@@ -434,6 +489,15 @@ function isJobPage() {
   }
   if (isLevelsFyi()) {
     return isLevelsFyiJobPage();
+  }
+  if (isRippling()) {
+    return isRipplingDedicatedPage();
+  }
+  if (isWorkableCareers()) {
+    return isWorkableCareersDedicatedPage();
+  }
+  if (isWorkableJobSearch()) {
+    return isWorkableJobSearchJobPage();
   }
   if (isZipRecruiter()) {
     return isZipRecruiterJobPage();
@@ -857,6 +921,9 @@ function waitForContentAndSelect() {
       (isTaleo() && !!findTaleoPosting()) ||
       (isMonsterPlatform() && !!getMonsterPlatformJobView()) ||
       (isLevelsFyi() && !!getLevelsFyiJobDetail()) ||
+      (isRippling() && !!findRipplingPosting()?.description.textContent.trim()) ||
+      (isWorkableCareers() && findWorkableCareersSections().length > 0) ||
+      (isWorkableJobSearch() && !!document.querySelector('[data-ui="job-breakdown-description-parsed-html"]')) ||
       document.querySelector('.job__description.body') ||
       document.querySelector('.application-description.body') ||
       document.querySelector('div[data-qa="job-description"]') ||
@@ -1092,6 +1159,31 @@ function findJobTitleUrl() {
       return `${window.location.origin}/jobs?jobId=${encodeURIComponent(jobId)}`;
     }
     debugLog('warn', 'Could not determine Levels.fyi job URL');
+    return null;
+  }
+
+  if (isRippling()) {
+    if (isRipplingDedicatedPage()) return window.location.href;
+    debugLog('warn', 'Could not determine Rippling job URL');
+    return null;
+  }
+
+  if (isWorkableCareers()) {
+    if (isWorkableCareersDedicatedPage()) return window.location.href;
+    debugLog('warn', 'Could not determine Workable job URL');
+    return null;
+  }
+
+  if (isWorkableJobSearch()) {
+    if (window.location.pathname.startsWith('/view/')) {
+      return `${window.location.origin}${window.location.pathname}`;
+    }
+    // /view/<id> redirects to the posting's full /view/<id>/<slug> URL.
+    const jobId = new URLSearchParams(window.location.search).get('selectedJobId');
+    if (jobId && isWorkableJobSearchJobPage()) {
+      return `${window.location.origin}/view/${encodeURIComponent(jobId)}`;
+    }
+    debugLog('warn', 'Could not determine Workable job URL');
     return null;
   }
 
@@ -1818,6 +1910,43 @@ function selectLevelsFyiDescription() {
   });
 }
 
+// Title, then the description. The department, location, and Apply button
+// after it are not selected.
+function selectRipplingDescription() {
+  selectWhenReady('Rippling', () => {
+    const posting = findRipplingPosting();
+    if (!posting?.description.textContent.trim()) return null;
+    return { start: posting.title, end: posting.description };
+  });
+}
+
+// Title, the workplace/department/location line, the Overview and
+// Application tab names, the Share button, then the description,
+// requirements, and benefits sections. The Apply button is not selected.
+function selectWorkableCareersDescription() {
+  selectWhenReady('Workable', () => {
+    const title = document.querySelector('h1[data-ui="job-title"]');
+    const sections = findWorkableCareersSections();
+    if (!title || sections.length === 0) return null;
+    return { start: title, end: sections[sections.length - 1] };
+  });
+}
+
+// Title, company, workplace/location/department line, posted date, the
+// Share and Apply buttons, then the description, requirements, and benefits
+// sections. "More about <company>" and the sticky Apply button are not
+// selected.
+function selectWorkableJobSearchDescription() {
+  selectWhenReady('Workable', () => {
+    const title = document.querySelector('[data-ui="overview-title"]');
+    const sections = [...document.querySelectorAll(
+      '[data-ui^="job-breakdown-"][data-ui$="-parsed-html"]'
+    )].filter(section => section.textContent.trim());
+    if (!title || sections.length === 0) return null;
+    return { start: title, end: sections[sections.length - 1] };
+  });
+}
+
 function selectZipRecruiterDescription() {
   try {
     const heading = findZipRecruiterDescriptionHeading();
@@ -2017,6 +2146,21 @@ function selectAboutTheJobSection() {
 
     if (isLevelsFyi()) {
       selectLevelsFyiDescription();
+      return;
+    }
+
+    if (isRippling()) {
+      selectRipplingDescription();
+      return;
+    }
+
+    if (isWorkableCareers()) {
+      selectWorkableCareersDescription();
+      return;
+    }
+
+    if (isWorkableJobSearch()) {
+      selectWorkableJobSearchDescription();
       return;
     }
 
